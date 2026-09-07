@@ -1,180 +1,74 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="icon" type="image/png" href="./images/favicon.png">
-  <title>Cell to Self</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Real life after prison, rewritten in real time. Messy, funny, painful, hopeful, and free.">
+  <meta name="theme-color" content="#11100e">
+  <meta property="og:title" content="Cell to Self — Life, Rewritten in Real Time">
+  <meta property="og:description" content="Real life after prison, written before hindsight makes it tidy.">
+  <meta property="og:type" content="website">
+  <meta property="og:image" content="./assets/images/og-cell-to-self.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Cell to Self — Life, Rewritten in Real Time">
+  <meta name="twitter:description" content="Real life after prison, written before hindsight makes it tidy.">
+  <meta name="twitter:image" content="./assets/images/og-cell-to-self.png">
+  <link rel="icon" type="image/png" href="./assets/images/favicon.png">
+  <title>Cell to Self — Life, Rewritten in Real Time</title>
   <link rel="stylesheet" href="./styles.css">
 </head>
-
 <body>
-
-  <!-- Header -->
-  <header>
-    <nav>
-      <!-- Hamburger Icon -->
-      <img src="./assets/images/icon-menu.svg" alt="mobile menu" class="mobile-menu" id="menu-btn">
-
-      <a class="home-link" href="index.html">
-        <img src="./assets/images/logo.png" alt="logo" class="logo">
-      </a>
-      <ul id="nav-links">
-        <li><a class="nav" href="index.html">Home</a></li>
-        <li><a class="nav" href="preview.html">Preview</a></li>
-        <li><a class="nav" href="about.html">About</a></li>
-        <li><a class="nav" href="contact.html">Contact</a></li>
-      </ul>
+  <a class="skip-link" href="#stories">Skip to stories</a>
+  <header class="site-header">
+    <a class="wordmark" href="#top" aria-label="Cell to Self home"><img class="horizontal-logo" src="./assets/images/cell-to-self-horizontal-logo.png" alt="Cell to Self — Life, Rewritten in Real Time"></a>
+    <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="site-nav"><span></span><span></span><span></span><b>Menu</b></button>
+    <nav id="site-nav" aria-label="Main navigation">
+      <a href="#start">Start here</a><a href="#stories">Stories</a><a href="#dispatches">Dear Prison Pals</a><a href="#about">About Amy</a>
     </nav>
-    <div class="header-right">
-      <div class="popup">
-        <img src="./assets/images/icon-cart.svg" alt="shopping cart" class="cart-icon" id="cart">
-        <div class="cart-qty"></div>
-        <aside id="aside" class="empty">
-          <h6>Pre-order</h6>
-          <div class="img-head empty" id="img-head">
-            <img src="./assets/images/book-1 thumbnail.png" alt="book cover" class="cart-pic">
-            <div class="popup-text">
-              <p class="cart-text">404: Life Not Found</p>
-              <p class="cart-amt" id="cart-amt"></p>
-            </div>
-            <img src="./assets/images/icon-delete.svg" alt="delete" id="delete">
-            <h3>
-              Checkout Coming Soon</h3>
-          </div>
-          <div class="show empty" id="empty">
-            <p class="empty-text">Your cart is empty.</p>
-          </div>
-        </aside>
-      </div>
-      <img src="./assets/images/image-avatar.png" alt="profile picture" class="profile-pic">
-    </div>
+    <div class="issue-stamp" aria-label="Written in real time"><span>Dispatch</span><strong>001</strong></div>
   </header>
-
-  <!-- Main Content -->
-  <main>
-    <section class="product-images">
-      <div class="large-pic">
-        <img src="./assets/images/icon-previous.svg" alt="previous" id="previous" class="move">
-        <img src="./assets/images/icon-next.svg" alt="previous" id="next" class="move">
+  <main id="top">
+    <section class="hero" id="start">
+      <div class="hero-kicker"><span>Life after prison</span><span>Written from inside the process</span></div>
+      <div class="hero-title" aria-label="Real life, rewritten in real time"><span class="real">Real life,</span><span class="rewritten">rewritten</span><span class="in-time">in real <span class="time-word">time.</span></span></div>
+      <div class="hero-story">
+        <p>This isn’t a comeback story. It’s real life after prison, written in real time.</p>
+        <p class="scribble">No polish. No pretending.</p>
+        <a class="arrow-link" href="#stories">Enter the story <span aria-hidden="true">↘</span></a>
+        <p class="hero-after-button">Just the messy work of becoming yourself again.</p>
       </div>
-      <img src="./assets/images/book-1.png" alt="book cover" id="books1" class="img-large img-main">
-      <div class="thumbnail-box">
-        <img src="./assets/images/book-1 thumbnail.png" data-largeimage="./assets/images/book-1.png" alt="book cover"
-          id="book1" class="img-thumb img-active">
-        <img src="./assets/images/book-2 thumbnail.png" data-largeimage="./assets/images/book-2.png"
-          alt="terminal version of book cover" id="book2" class="img-thumb">
-        <img src="./assets/images/book-3 thumbnail.png" data-largeimage="./assets/images/book-3.png" alt="book quote"
-          id="book3" class="img-thumb">
-        <img src="./assets/images/book-4 thumbnail.png" data-largeimage="./assets/images/book-4.png"
-          alt="book back cover" id="book4" class="img-thumb img-last">
+      <div class="hero-portrait"><div class="photo-frame"><img src="./assets/images/main.jpg" alt="Amy Parks, writer of Cell to Self"></div><span class="photo-note">Amy, according to Amy.</span></div>
+      <aside class="live-note"><span class="live-dot"></span><strong>Still becoming.</strong><p>Messy. Beautiful. Chaotic. Hilarious. Grateful. Free.</p></aside>
+    </section>
+    <section class="manifesto" aria-label="Cell to Self purpose"><p>What they printed was <em>part</em> of the story.</p><p>What they missed is everything that came next.</p></section>
+    <section class="story-section" id="stories">
+      <header class="section-heading"><div><span>Read what’s happening</span><strong>RIGHT NOW</strong></div><p>Freedom doesn’t arrive in order. Neither do these stories.</p></header>
+      <div class="story-grid">
+        <article class="story-card story-card--lead"><a href="https://celltoself.com/2026/08/22/hey-thats-mine/" target="_blank" rel="noreferrer"><span class="category">Dear Prison Pals · 9 months out</span><h2>Hey!<br>That’s<br><em>mine.</em></h2><p>A bedroom. A kitchen. A shower. Even the Wi-Fi. Ordinary freedom, finally spectacular.</p><span class="read">Read the dispatch ↗</span></a></article>
+        <article class="story-card story-card--google"><a href="https://celltoself.com/2026/06/28/me-according-to-google/" target="_blank" rel="noreferrer"><span class="category">After the Headline</span><span class="search-label">Search result</span><h2>Me, according to <s>Google</s> me.</h2><p>The article arrived. It just wasn’t the loudest voice in the room anymore.</p><span class="read">Read the story ↗</span></a></article>
+        <article class="story-card story-card--quiet"><a href="https://celltoself.com/2026/07/12/im-not-ready-to-write-this/" target="_blank" rel="noreferrer"><span class="category">Healing in Real Time</span><h2>I’m not ready<br>to write this.</h2><div class="quiet-space"></div><p>But I’m writing it anyway.</p><span class="read">Sit with it ↗</span></a></article>
+        <article class="story-card story-card--keys"><a href="https://celltoself.com/2026/06/27/the-keys-were-the-prize-for-the-prep/" target="_blank" rel="noreferrer"><span class="category">Free-world artifact No. 01</span><div class="key-mark" aria-hidden="true">KEYS</div><h2>The prize<br>for the prep.</h2><p>Freedom looked sudden. The work started years before the gate opened.</p><span class="read">Read the letter ↗</span></a></article>
       </div>
     </section>
-    <section class="text">
-      <div class="bookinfo">
-
-        <p class="terminal">
-          WIRITING IN PROGRESS
-        </p>
-        <h1>Cell to Self</h1>
-        <h2 class="tagline">Life, Rewritten in Real Time</h2>
-        <h4>From the cell I was in to the self I am becoming</h4>
+    <section class="dispatches" id="dispatches">
+      <div class="dispatch-intro"><span class="eyebrow">Letters to the women still inside</span><h2>Dear<br>Prison<br>Pals,</h2><p>Actual letters about debit cards, probation, men, meetings, peanut butter Snickers, work, God, and everything freedom forgot to explain.</p></div>
+      <div class="dispatch-stack">
+        <a class="dispatch" href="https://celltoself.com/2025/12/31/taptopay/" target="_blank" rel="noreferrer"><span class="dispatch-date">2 weeks out</span><strong>Tap to Pay, Probation, &amp; Peanut Butter Snickers</strong><span class="dispatch-arrow">↗</span></a>
+        <a class="dispatch" href="https://celltoself.com/2026/05/31/somehow-this-is-my-life-now/" target="_blank" rel="noreferrer"><span class="dispatch-date">2 months out</span><strong>Somehow, This Is My Life Now</strong><span class="dispatch-arrow">↗</span></a>
+        <a class="dispatch" href="https://celltoself.com/2026/06/14/but-wait-theres-more/" target="_blank" rel="noreferrer"><span class="dispatch-date">4 months out</span><strong>But Wait. There’s More.</strong><span class="dispatch-arrow">↗</span></a>
       </div>
-
-      <p class="terminal">
-        <span class="prompt">>></span>
-        <span class="typing">MY LIFE REBUILD IN PROGRESS</span>
-      </p>
-      <p>
-       This isn’t a comeback story. It’s real life after prison, written in real time.
-    No polish. No pretending. Just the messy work of becoming yourself again.
-      </p>
-      <div class="amount">
-        <div class="price-disc">
-          <h2>
-            $20.00
-          </h2>
-          <h3 class="pct">
-            50%
-          </h3>
-        </div>
-        <h4>
-          $40.00
-        </h4>
-      </div>
-      <div class="input-btn">
-        <div class="quantity">
-          <img src="./assets/images/icon-minus.svg" alt="decrease" class="minus">
-          <img src="./assets/images/icon-plus.svg" alt="increase" class="plus">
-          <input type="text" value="0" class="qty">
-        </div>
-        <button type="button" id="add-cart">
-          <svg xmlns="http://www.w3.org/2000/svg" class="cart-btn" width="22" height="20">
-            <path class="cart-btn"
-              d="M20.925 3.641H3.863L3.61.816A.896.896 0 0 0 2.717 0H.897a.896.896 0 1 0 0 1.792h1l1.031 11.483c.073.828.52 1.726 1.291 2.336C2.83 17.385 4.099 20 6.359 20c1.875 0 3.197-1.87 2.554-3.642h4.905c-.642 1.77.677 3.642 2.555 3.642a2.72 2.72 0 0 0 2.717-2.717 2.72 2.72 0 0 0-2.717-2.717H6.365c-.681 0-1.274-.41-1.53-1.009l14.321-.842a.896.896 0 0 0 .817-.677l1.821-7.283a.897.897 0 0 0-.87-1.114ZM6.358 18.208a.926.926 0 0 1 0-1.85.926.926 0 0 1 0 1.85Zm10.015 0a.926.926 0 0 1 0-1.85.926.926 0 0 1 0 1.85Zm2.021-7.243-13.8.81-.57-6.341h15.753l-1.383 5.53Z"
-              fill="#69707D" fill-rule="nonzero" />
-          </svg>
-          Pre-order Book</button>
-      </div>
+    </section>
+    <section class="archive-strip" aria-label="Story channels"><div class="ticker" aria-hidden="true"><span>After the Headline</span><i>✦</i><span>Dear Prison Pals</span><i>✦</i><span>Healing in Real Time</span><i>✦</i><span>Ink on the Inside</span><i>✦</i><span>After the Headline</span><i>✦</i><span>Dear Prison Pals</span><i>✦</i></div></section>
+    <section class="about" id="about">
+      <div class="about-photo"><img src="./assets/images/amy-about-faded.png" alt="Amy Parks, founder and writer of Cell to Self"></div>
+      <div class="about-copy"><span class="eyebrow">The woman behind the headline</span><h2>I Am Amy.<br>I write from the middle.</h2><p>I’m not waiting until the lesson is learned, the pain is over, or the story makes sense. Cell to Self is the living record of becoming someone I can finally call my own.</p><a class="arrow-link arrow-link--light" href="https://celltoself.com/about/" target="_blank" rel="noreferrer">Meet Amy <span aria-hidden="true">↗</span></a></div>
+      <blockquote>“Treat ordinary freedom as spectacular.”</blockquote>
+    </section>
+    <section class="brand-signature" aria-label="Cell to Self publication mark">
+      <img src="./assets/images/cell-to-self-full-logo.png" alt="Cell to Self — Life, Rewritten in Real Time">
     </section>
   </main>
-
-  <!-- The Modal/Lightbox -->
-  <div id="myModal" class="modal">
-    <span class="close" id="close" onclick="closeModal()">&times;</span>
-    <div class="modal-content">
-
-      <div class="mySlides">
-        <img src="./assets/images/book-1.png" alt="book cover" class="light-pic">
-      </div>
-
-      <div class="mySlides">
-        <img src="./assets/images/book-2.png" alt="terminal book cover" class="light-pic">
-      </div>
-
-      <div class="mySlides">
-        <img src="./assets/images/book-3.png" alt="book quote" class="light-pic">
-      </div>
-
-      <div class="mySlides">
-        <img src="./assets/images/book-4.png" alt="book back cover" class="light-pic">
-      </div>
-
-      <!-- Next/previous controls -->
-      <a class="prev" onclick="plusSlides(-1)">&#10094;</a>
-      <a class="next" onclick="plusSlides(1)">&#10095;</a>
-
-      <!-- Thumbnail image controls -->
-      <div class="column">
-        <img class="demo" src="./assets/images/book-1 thumbnail.png" onclick="currentSlide(1)" alt="book cover">
-      </div>
-
-      <div class="column">
-        <img class="demo" src="./assets/images/book-2 thumbnail.png" onclick="currentSlide(2)"
-          alt="terminal book cover">
-      </div>
-
-      <div class="column">
-        <img class="demo" src="./assets/images/book-3 thumbnail.png" onclick="currentSlide(3)" alt="book quote">
-      </div>
-
-      <div class="column">
-        <img class="demo" src="./assets/images/book-4 thumbnail.png" onclick="currentSlide(4)" alt="book back cover">
-      </div>
-    </div>
-  </div>
-
-  <footer>
-    <div class="footnote">
-      This webpage began as a Frontend Mentor challenge that I completed while incarcerated. I rebuilt the project to
-      represent a future memoir and to demonstrate my ability to work with HTML,
-      CSS, and vanilla JavaScript.
-    </div>
-  </footer>
-
+  <footer><img class="footer-logo" src="./assets/images/cell-to-self-horizontal-logo.png" alt="Cell to Self — Life, Rewritten in Real Time"><p>Life, rewritten in real time.</p><a href="#top">Back to top ↑</a></footer>
   <script src="./main.js"></script>
-
 </body>
-
 </html>
