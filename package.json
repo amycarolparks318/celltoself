@@ -1,0 +1,10 @@
+{
+  "name": "cell-to-self",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "import:wordpress": "node scripts/import-wordpress.mjs",
+    "build": "node scripts/build.mjs",
+    "test": "node scripts/check-site.mjs"
+  }
+}
