@@ -22,7 +22,14 @@ function cleanArticle(html, prefix = '../') {
   return html
     .replace(/<div class="wp-block-buttons[\s\S]*$/i, '')
     .replace(/\s(?:srcset|sizes|data-[\w-]+)="[^"]*"/g, '')
+    .replace(/https:\/\/(?:i0\.wp\.com\/)?celltoself\.com\/wp-content\/uploads\/([^"'<\s?]+)(?:\?[^"'<\s]*)?/gi, (_, mediaPath) => `${prefix}assets/media/${mediaPath.replace(/\.(?:png|jpe?g)$/i, '.webp')}`)
     .replace(/href="https:\/\/celltoself\.com\//g, `href="${prefix}`);
+}
+
+function localMediaUrl(url, prefix) {
+  if (!url) return '';
+  const match = url.match(/^https:\/\/(?:i0\.wp\.com\/)?celltoself\.com\/wp-content\/uploads\/([^?]+)(?:\?.*)?$/i);
+  return match ? `${prefix}assets/media/${match[1].replace(/\.(?:png|jpe?g)$/i, '.webp')}` : url;
 }
 
 function header(prefix, active = '') {
@@ -36,7 +43,7 @@ function header(prefix, active = '') {
   ];
   return `<a class="skip-link" href="#main-content">Skip to content</a>
   <header class="site-header global-header">
-    <a class="wordmark" href="${prefix}index.html" aria-label="Cell to Self home"><img class="horizontal-logo" src="${prefix}assets/images/cell-to-self-horizontal-logo.png" alt="Cell to Self — Life, Rewritten in Real Time"></a>
+    <a class="wordmark" href="${prefix}index.html" aria-label="Cell to Self home"><img class="horizontal-logo" src="${prefix}assets/images/cell-to-self-horizontal-logo.webp" alt="Cell to Self — Life, Rewritten in Real Time"></a>
     <button class="menu-toggle" type="button" aria-label="Open navigation menu" aria-expanded="false" aria-controls="site-nav"><span></span><span></span><span></span><b>Menu</b></button>
     <nav id="site-nav" aria-label="Main navigation">${links.map(([key, label, href]) => `<a href="${href}"${key === active ? ' aria-current="page"' : ''}>${label}</a>`).join('')}</nav>
   </header>`;
@@ -45,7 +52,7 @@ function header(prefix, active = '') {
 function footer(prefix) {
   const facebookIcon = '<svg class="facebook-icon" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M24 12.07C24 5.4 18.63 0 12 0S0 5.4 0 12.07C0 18.1 4.39 23.1 10.13 24v-8.44H7.08v-3.49h3.05V9.41c0-3.03 1.79-4.7 4.53-4.7 1.31 0 2.68.24 2.68.24v2.97h-1.51c-1.49 0-1.96.93-1.96 1.89v2.26h3.33l-.53 3.49h-2.8V24C19.61 23.1 24 18.1 24 12.07Z"/></svg>';
   return `<footer class="site-footer">
-    <div class="footer-brand"><img class="footer-logo" src="${prefix}assets/images/cell-to-self-horizontal-logo.png" alt="Cell to Self"><p>Real life after prison, written in real time—without polish or pretending.</p></div>
+    <div class="footer-brand"><img class="footer-logo" src="${prefix}assets/images/cell-to-self-horizontal-logo.webp" alt="Cell to Self"><p>Real life after prison, written in real time—without polish or pretending.</p></div>
     <nav aria-label="Footer navigation"><a href="${prefix}index.html">Home</a><a href="${prefix}start-here/">Start Here</a><a href="${prefix}stories/">Stories</a><a href="${prefix}dear-prison-pals/">Dear Prison Pals</a><a href="${prefix}about/">About Amy</a></nav>
     <div class="footer-connect"><strong>Stay connected</strong><div class="footer-socials"><a href="https://www.facebook.com/cell2self">${facebookIcon}<span>Cell to Self</span></a><a href="https://www.facebook.com/amycarolparks/">${facebookIcon}<span>Amy Parks</span></a></div><a href="${prefix}stay-connected/">Contact Amy</a></div>
     <div class="footer-legal"><span>© ${new Date().getFullYear()} Cell to Self</span><a href="${prefix}privacy/">Privacy</a><a href="#top">Back to Top</a></div>
@@ -61,7 +68,7 @@ function storyCard(post, prefix, index = 0, hidden = false) {
   const cat = category(post);
   const description = strip(post.excerpt || post.content).slice(0, 180).replace(/\s+\S*$/, '') + '…';
   return `<article class="archive-card${hidden ? ' is-older-story' : ''}" data-category="${cat.slug}"${hidden ? ' hidden' : ''}>
-    ${post.featuredImage ? `<img src="${post.featuredImage}" alt="${esc(post.featuredImageAlt || decode(post.title))}" loading="lazy">` : `<div class="card-number" aria-hidden="true">${String(index + 1).padStart(2, '0')}</div>`}
+    ${post.featuredImage ? `<img src="${localMediaUrl(post.featuredImage, prefix)}" alt="${esc(post.featuredImageAlt || decode(post.title))}" loading="lazy">` : `<div class="card-number" aria-hidden="true">${String(index + 1).padStart(2, '0')}</div>`}
     <div class="archive-card-copy"><p class="story-meta"><span>${esc(cat.name)}</span><time datetime="${post.date.slice(0, 10)}">${formatDate(post.date)}</time></p><h2><a href="${prefix}${postRoute(post)}/">${esc(post.title)}</a></h2><p>${esc(description)}</p><a class="text-link" href="${prefix}${postRoute(post)}/">Read Story</a></div>
   </article>`;
 }
@@ -92,7 +99,7 @@ const startBody = `<section class="page-hero page-hero--start"><p class="eyebrow
 await save('start-here', layout({ route: 'start-here', title: 'Start Here', description: 'Meet Amy and learn how to begin reading Cell to Self.', active: 'start', body: startBody }));
 
 const aboutPage = data.pages.find((page) => page.slug === 'about');
-const aboutBody = `<section class="page-hero page-hero--about"><p class="eyebrow">The woman behind the headline</p><h1>I Am Amy.</h1><p>This time, I tell the story.</p></section><article class="editorial-page editorial-page--about"><img class="about-page-photo" src="../assets/images/amy-about-transparent.png" alt="Amy Parks, founder and writer of Cell to Self"><div class="article-content">${cleanArticle(aboutPage.content)}</div></article>`;
+const aboutBody = `<section class="page-hero page-hero--about"><p class="eyebrow">The woman behind the headline</p><h1>I Am Amy.</h1><p>This time, I tell the story.</p></section><article class="editorial-page editorial-page--about"><img class="about-page-photo" src="../assets/images/amy-about-transparent.webp" alt="Amy Parks, founder and writer of Cell to Self"><div class="article-content">${cleanArticle(aboutPage.content)}</div></article>`;
 await save('about', layout({ route: 'about', title: 'About Amy', description: 'Meet Amy Parks, the writer behind Cell to Self.', active: 'about', body: aboutBody }));
 
 const connectBody = `<section class="page-hero"><p class="eyebrow">Keep reading</p><h1>Stay<br><em>connected.</em></h1><p>Send a note, follow along, or ask to hear when something new is published.</p></section><section class="connection-page contact-layout"><div><p class="eyebrow">Contact Amy</p><h2>Say hello.</h2><p>Questions, stories, speaking inquiries, support, or just a note from one human figuring it out to another.</p><form class="contact-form" data-contact-form action="mailto:amycarolparks318@gmail.com" method="post" enctype="text/plain"><label for="contact-name">Name</label><input id="contact-name" name="name" type="text" autocomplete="name"><label for="contact-phone">Phone number <span>(optional)</span></label><input id="contact-phone" name="phone" type="tel" autocomplete="tel"><label for="contact-email">Email <span>(required)</span></label><input id="contact-email" name="email" type="email" autocomplete="email" required><label for="contact-message">Message</label><textarea id="contact-message" name="message" rows="7"></textarea><label class="checkbox-label" for="contact-subscribe"><input id="contact-subscribe" name="subscribe" type="checkbox"><span>Yes, tell Amy I’d like to subscribe when email updates become available.</span></label><button class="button-link" type="submit">Send Message</button><p class="form-note">Submitting opens your email app with a message addressed to Amy. Nothing is stored on this website.</p></form></div><aside class="connection-options"><h2>Find Cell to Self</h2><a class="social-link" href="https://www.facebook.com/cell2self"><svg class="facebook-icon" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M24 12.07C24 5.4 18.63 0 12 0S0 5.4 0 12.07C0 18.1 4.39 23.1 10.13 24v-8.44H7.08v-3.49h3.05V9.41c0-3.03 1.79-4.7 4.53-4.7 1.31 0 2.68.24 2.68.24v2.97h-1.51c-1.49 0-1.96.93-1.96 1.89v2.26h3.33l-.53 3.49h-2.8V24C19.61 23.1 24 18.1 24 12.07Z"/></svg><span>Cell to Self on Facebook</span></a><a class="social-link" href="https://www.facebook.com/amycarolparks/"><svg class="facebook-icon" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M24 12.07C24 5.4 18.63 0 12 0S0 5.4 0 12.07C0 18.1 4.39 23.1 10.13 24v-8.44H7.08v-3.49h3.05V9.41c0-3.03 1.79-4.7 4.53-4.7 1.31 0 2.68.24 2.68.24v2.97h-1.51c-1.49 0-1.96.93-1.96 1.89v2.26h3.33l-.53 3.49h-2.8V24C19.61 23.1 24 18.1 24 12.07Z"/></svg><span>Amy on Facebook</span></a><a class="text-link" href="../stories/">Explore All Stories</a></aside></section>`;
@@ -109,7 +116,7 @@ for (let index = 0; index < data.posts.length; index += 1) {
   const route = postRoute(post);
   const prefix = prefixFor(route);
   const cat = category(post);
-  const body = `<article class="story-page"><header class="article-header"><a class="back-link" href="${prefix}stories/">Back to Stories</a><p class="story-meta"><a href="${prefix}category/${cat.slug}/">${esc(cat.name)}</a><time datetime="${post.date.slice(0, 10)}">${formatDate(post.date)}</time></p><h1>${esc(post.title)}</h1>${post.featuredImage ? `<img class="article-featured" src="${post.featuredImage}" alt="${esc(post.featuredImageAlt || decode(post.title))}">` : ''}</header><div class="article-content">${cleanArticle(post.content)}</div><nav class="story-pagination" aria-label="Story navigation">${previous ? `<a href="${prefix}${postRoute(previous)}/"><span>Previous Story</span><strong>${esc(previous.title)}</strong></a>` : '<span></span>'}${next ? `<a href="${prefix}${postRoute(next)}/"><span>Next Story</span><strong>${esc(next.title)}</strong></a>` : '<span></span>'}</nav><section class="article-subscribe"><p class="eyebrow">The story is still unfolding</p><h2>Stay connected.</h2><p>Email subscription is coming soon. Until then, explore the complete archive.</p><a class="button-link" href="${prefix}stories/">Explore All Stories</a></section></article>`;
+  const body = `<article class="story-page"><header class="article-header"><a class="back-link" href="${prefix}stories/">Back to Stories</a><p class="story-meta"><a href="${prefix}category/${cat.slug}/">${esc(cat.name)}</a><time datetime="${post.date.slice(0, 10)}">${formatDate(post.date)}</time></p><h1>${esc(post.title)}</h1>${post.featuredImage ? `<img class="article-featured" src="${localMediaUrl(post.featuredImage, prefix)}" alt="${esc(post.featuredImageAlt || decode(post.title))}">` : ''}</header><div class="article-content">${cleanArticle(post.content, prefix)}</div><nav class="story-pagination" aria-label="Story navigation">${previous ? `<a href="${prefix}${postRoute(previous)}/"><span>Previous Story</span><strong>${esc(previous.title)}</strong></a>` : '<span></span>'}${next ? `<a href="${prefix}${postRoute(next)}/"><span>Next Story</span><strong>${esc(next.title)}</strong></a>` : '<span></span>'}</nav><section class="article-subscribe"><p class="eyebrow">The story is still unfolding</p><h2>Stay connected.</h2><p>Email subscription is coming soon. Until then, explore the complete archive.</p><a class="button-link" href="${prefix}stories/">Explore All Stories</a></section></article>`;
   await save(route, layout({ route, title: strip(post.title), description: strip(post.excerpt || post.content).slice(0, 155), active: 'stories', body }));
 }
 
