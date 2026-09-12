@@ -5,6 +5,8 @@ toggle?.addEventListener('click', () => {
   const open = toggle.getAttribute('aria-expanded') === 'true';
   toggle.setAttribute('aria-expanded', String(!open));
   toggle.setAttribute('aria-label', open ? 'Open navigation menu' : 'Close navigation menu');
+  const label = toggle.querySelector('b');
+  if (label) label.textContent = open ? 'Menu' : 'Close';
   nav.classList.toggle('open', !open);
 });
 
@@ -13,6 +15,8 @@ nav?.addEventListener('click', (event) => {
   nav.classList.remove('open');
   toggle?.setAttribute('aria-expanded', 'false');
   toggle?.setAttribute('aria-label', 'Open navigation menu');
+  const label = toggle?.querySelector('b');
+  if (label) label.textContent = 'Menu';
 });
 
 document.addEventListener('keydown', (event) => {
@@ -20,6 +24,8 @@ document.addEventListener('keydown', (event) => {
   nav.classList.remove('open');
   toggle?.setAttribute('aria-expanded', 'false');
   toggle?.setAttribute('aria-label', 'Open navigation menu');
+  const label = toggle?.querySelector('b');
+  if (label) label.textContent = 'Menu';
   toggle?.focus();
 });
 
