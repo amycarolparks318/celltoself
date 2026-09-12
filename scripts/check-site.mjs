@@ -44,6 +44,13 @@ for (const file of htmlFiles) {
 const expectedPages = 1 + 6 + 4 + 27;
 if (htmlFiles.length !== expectedPages) failures.push(`Expected ${expectedPages} HTML pages, found ${htmlFiles.length}`);
 
+const storiesHtml = await readFile(path.join(root, 'stories', 'index.html'), 'utf8');
+const orderedCards = [...storiesHtml.matchAll(/data-reading-order="(\d+)"/g)].map((match) => Number(match[1])).sort((a, b) => a - b);
+if (!storiesHtml.includes('data-filter="reading-order"')) failures.push('Stories page: missing Read in Order control');
+if (orderedCards.length !== 25 || orderedCards.some((value, index) => value !== index)) {
+  failures.push(`Stories page: expected a continuous 25-story reading order, found ${orderedCards.length}`);
+}
+
 if (failures.length) {
   console.error(`Site check failed with ${failures.length} issue(s):\n${failures.join('\n')}`);
   process.exit(1);

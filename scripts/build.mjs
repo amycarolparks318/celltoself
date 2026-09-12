@@ -18,6 +18,26 @@ const prefixFor = (route = '') => '../'.repeat(route.split('/').filter(Boolean).
 const formatDate = (date) => new Intl.DateTimeFormat('en-US', { month: 'long', day: 'numeric', year: 'numeric', timeZone: 'UTC' }).format(new Date(`${date.slice(0, 10)}T12:00:00Z`));
 const category = (post) => post.categories[0] || { name: 'Stories', slug: 'stories' };
 
+const postsByRoute = new Map(data.posts.map((post) => [postRoute(post), post]));
+const readNextRoute = (post) => post.content.match(/href="https:\/\/celltoself\.com\/(\d{4}\/\d{2}\/\d{2}\/[^"/]+)\/"[^>]*>READ NEXT/i)?.[1];
+const readingOrder = [];
+const visitedRoutes = new Set();
+let orderedPost = [...data.posts].sort((a, b) => a.date.localeCompare(b.date))[0];
+while (orderedPost && !visitedRoutes.has(postRoute(orderedPost))) {
+  const route = postRoute(orderedPost);
+  readingOrder.push(orderedPost);
+  visitedRoutes.add(route);
+  orderedPost = postsByRoute.get(readNextRoute(orderedPost));
+}
+for (const slug of ['hey-thats-mine', 'sometimes-home-was-hayley', 'nothing-exciting-to-report']) {
+  const post = data.posts.find((item) => item.slug === slug);
+  if (post && !visitedRoutes.has(postRoute(post))) {
+    readingOrder.push(post);
+    visitedRoutes.add(postRoute(post));
+  }
+}
+const readingOrderIndex = new Map(readingOrder.map((post, index) => [postRoute(post), index]));
+
 function cleanArticle(html, prefix = '../') {
   return html
     .replace(/<div class="wp-block-buttons[\s\S]*$/i, '')
@@ -67,7 +87,8 @@ function layout({ route = '', title, description, active, body }) {
 function storyCard(post, prefix, index = 0, hidden = false) {
   const cat = category(post);
   const description = strip(post.excerpt || post.content).slice(0, 180).replace(/\s+\S*$/, '') + '…';
-  return `<article class="archive-card${hidden ? ' is-older-story' : ''}" data-category="${cat.slug}"${hidden ? ' hidden' : ''}>
+  const orderIndex = readingOrderIndex.get(postRoute(post));
+  return `<article class="archive-card${hidden ? ' is-older-story' : ''}" data-category="${cat.slug}" data-default-order="${index}" data-reading-order="${orderIndex ?? ''}"${hidden ? ' hidden' : ''}>
     ${post.featuredImage ? `<img src="${localMediaUrl(post.featuredImage, prefix)}" alt="${esc(post.featuredImageAlt || decode(post.title))}" loading="lazy">` : `<div class="card-number" aria-hidden="true">${String(index + 1).padStart(2, '0')}</div>`}
     <div class="archive-card-copy"><p class="story-meta"><span>${esc(cat.name)}</span><time datetime="${post.date.slice(0, 10)}">${formatDate(post.date)}</time></p><h2><a href="${prefix}${postRoute(post)}/">${esc(post.title)}</a></h2><p>${esc(description)}</p><a class="text-link" href="${prefix}${postRoute(post)}/">Read Story</a></div>
   </article>`;
@@ -80,7 +101,7 @@ async function save(route, html) {
 }
 
 const storiesBody = `<section class="page-hero page-hero--stories"><p class="eyebrow">The complete archive</p><h1>Stories,<br><em>still unfolding.</em></h1><p>Browse real life after prison as it happens—messy, funny, painful, hopeful, and free.</p></section>
-<section class="archive-section" aria-labelledby="all-stories"><div class="archive-toolbar"><h2 id="all-stories">All Stories</h2><div class="filters" role="group" aria-label="Filter stories"><button class="is-active" data-filter="all" aria-pressed="true">All</button>${data.categories.map((cat) => `<button data-filter="${cat.slug}" aria-pressed="false">${esc(cat.name)}</button>`).join('')}</div></div><div class="archive-grid">${data.posts.map((post, index) => storyCard(post, '../', index)).join('')}</div><p class="no-results" hidden>No stories are in this category yet.</p></section>`;
+<section class="archive-section" aria-labelledby="all-stories"><div class="archive-toolbar"><div><h2 id="all-stories">All Stories</h2><p class="archive-mode-note" data-archive-note>Newest stories first.</p></div><div class="filters" role="group" aria-label="Filter and order stories"><button class="is-active" data-filter="all" aria-pressed="true">All</button>${data.categories.map((cat) => `<button data-filter="${cat.slug}" aria-pressed="false">${esc(cat.name)}</button>`).join('')}<button class="reading-order-button" data-filter="reading-order" aria-pressed="false">Read in Order</button></div></div><div class="archive-grid">${data.posts.map((post, index) => storyCard(post, '../', index)).join('')}</div><p class="no-results" hidden>No stories are in this category yet.</p></section>`;
 await save('stories', layout({ route: 'stories', title: 'Stories', description: 'Browse every Cell to Self story by category.', active: 'stories', body: storiesBody }));
 
 const pals = data.posts.filter((post) => category(post).slug === 'dear-prison-pals');
@@ -111,9 +132,10 @@ await save('privacy', layout({ route: 'privacy', title: 'Privacy', description: 
 
 for (let index = 0; index < data.posts.length; index += 1) {
   const post = data.posts[index];
-  const previous = data.posts[index + 1];
-  const next = data.posts[index - 1];
   const route = postRoute(post);
+  const orderedIndex = readingOrderIndex.get(route);
+  const previous = orderedIndex === undefined ? data.posts[index + 1] : readingOrder[orderedIndex - 1];
+  const next = orderedIndex === undefined ? data.posts[index - 1] : readingOrder[orderedIndex + 1];
   const prefix = prefixFor(route);
   const cat = category(post);
   const body = `<article class="story-page"><header class="article-header"><a class="back-link" href="${prefix}stories/">Back to Stories</a><p class="story-meta"><a href="${prefix}category/${cat.slug}/">${esc(cat.name)}</a><time datetime="${post.date.slice(0, 10)}">${formatDate(post.date)}</time></p><h1>${esc(post.title)}</h1>${post.featuredImage ? `<img class="article-featured" src="${localMediaUrl(post.featuredImage, prefix)}" alt="${esc(post.featuredImageAlt || decode(post.title))}">` : ''}</header><div class="article-content">${cleanArticle(post.content, prefix)}</div><nav class="story-pagination" aria-label="Story navigation">${previous ? `<a href="${prefix}${postRoute(previous)}/"><span>Previous Story</span><strong>${esc(previous.title)}</strong></a>` : '<span></span>'}${next ? `<a href="${prefix}${postRoute(next)}/"><span>Next Story</span><strong>${esc(next.title)}</strong></a>` : '<span></span>'}</nav><section class="article-subscribe"><p class="eyebrow">The story is still unfolding</p><h2>Stay connected.</h2><p>Email subscription is coming soon. Until then, explore the complete archive.</p><a class="button-link" href="${prefix}stories/">Explore All Stories</a></section></article>`;
