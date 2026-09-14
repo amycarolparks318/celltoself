@@ -67,26 +67,10 @@ document.querySelector('[data-load-more]')?.addEventListener('click', (event) =>
 });
 
 const contactForm = document.querySelector('[data-contact-form]');
-contactForm?.addEventListener('submit', (event) => {
-  event.preventDefault();
-  if (!contactForm.reportValidity()) return;
-
-  const data = new FormData(contactForm);
-  const name = String(data.get('name') || '').trim();
-  const phone = String(data.get('phone') || '').trim();
-  const email = String(data.get('email') || '').trim();
-  const message = String(data.get('message') || '').trim();
-  const subscribe = data.get('subscribe') ? 'Yes' : 'No';
-  const subject = `Cell to Self contact${name ? ` from ${name}` : ''}`;
-  const body = [
-    `Name: ${name || 'Not provided'}`,
-    `Email: ${email}`,
-    `Phone: ${phone || 'Not provided'}`,
-    `Wants email updates: ${subscribe}`,
-    '',
-    'Message:',
-    message || 'No message provided.',
-  ].join('\n');
-
-  window.location.href = `mailto:amycarolparks318@gmail.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
-});
+const formSuccess = document.querySelector('[data-form-success]');
+if (contactForm && formSuccess && new URLSearchParams(window.location.search).get('sent') === '1') {
+  formSuccess.hidden = false;
+  contactForm.hidden = true;
+  formSuccess.focus?.();
+  window.history.replaceState({}, '', window.location.pathname);
+}

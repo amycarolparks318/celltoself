@@ -151,7 +151,8 @@ footer{background:var(--ink);color:var(--cream);display:flex;justify-content:spa
 .checkbox-label { display: flex; gap: .75rem; align-items: flex-start; text-transform: none !important; letter-spacing: 0 !important; line-height: 1.45; }
 .checkbox-label input { width: 1.15rem; height: 1.15rem; margin-top: .15rem; accent-color: var(--teal-dark); flex: 0 0 auto; }
 .contact-form .button-link { justify-self: start; margin-top: 1rem; border: 0; cursor: pointer; }
-.form-note { margin: .5rem 0 0; font-size: .88rem; }
+.form-honeypot { position: absolute !important; left: -10000px !important; width: 1px !important; height: 1px !important; overflow: hidden !important; }
+.form-success { margin: 1.5rem 0; border-left: .35rem solid var(--teal); padding: 1rem 1.15rem; background: #fffaf1; font-weight: 700; }
 .connection-options { border-top: 8px solid var(--teal); padding-top: 1.5rem; }
 .connection-options h2 { font-size: clamp(2rem, 4vw, 3.4rem); }
 .connection-options h3 { margin: 2.5rem 0 .4rem; font-family: Arial, sans-serif; font-size: .78rem; letter-spacing: .08em; text-transform: uppercase; }
