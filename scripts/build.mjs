@@ -1,7 +1,9 @@
 import { readFile, mkdir, writeFile } from 'node:fs/promises';
 import path from 'node:path';
 
-const data = JSON.parse(await readFile('content/wordpress.json', 'utf8'));
+const importedData = JSON.parse(await readFile('content/wordpress.json', 'utf8'));
+const localPosts = JSON.parse(await readFile('content/local-posts.json', 'utf8'));
+const data = { ...importedData, posts: [...localPosts, ...importedData.posts] };
 const categoryOrder = ['dear-prison-pals', 'after-the-headline', 'healing-in-real-time', 'ink-on-the-inside'];
 
 const decode = (value = '') => value
@@ -48,6 +50,8 @@ const writtenTimelineOverrides = {
   'dear-me': '2 months out of prison',
   'me-according-to-google': '3 months out of prison',
   'the-day-i-walked-away': '6 months out of prison',
+  'the-stuff-in-the-shower': 'Exactly 10 months out of prison',
+  'here-in-the-waiting': 'Exactly 10 months out of prison',
 };
 
 function writtenTimelineLabel(post) {
@@ -84,7 +88,7 @@ while (orderedPost && !visitedRoutes.has(postRoute(orderedPost))) {
   visitedRoutes.add(route);
   orderedPost = postsByRoute.get(readNextRoute(orderedPost));
 }
-for (const slug of ['hey-thats-mine', 'sometimes-home-was-hayley', 'nothing-exciting-to-report']) {
+for (const slug of ['hey-thats-mine', 'sometimes-home-was-hayley', 'nothing-exciting-to-report', 'the-stuff-in-the-shower', 'here-in-the-waiting']) {
   const post = data.posts.find((item) => item.slug === slug);
   if (post && !visitedRoutes.has(postRoute(post))) {
     readingOrder.push(post);

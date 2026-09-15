@@ -41,14 +41,17 @@ for (const file of htmlFiles) {
   }
 }
 
-const expectedPages = 1 + 6 + 4 + 27;
+const importedData = JSON.parse(await readFile(path.join(root, 'content', 'wordpress.json'), 'utf8'));
+const localPosts = JSON.parse(await readFile(path.join(root, 'content', 'local-posts.json'), 'utf8'));
+const expectedPages = 1 + 6 + importedData.categories.length + importedData.posts.length + localPosts.length;
 if (htmlFiles.length !== expectedPages) failures.push(`Expected ${expectedPages} HTML pages, found ${htmlFiles.length}`);
 
 const storiesHtml = await readFile(path.join(root, 'stories', 'index.html'), 'utf8');
 const orderedCards = [...storiesHtml.matchAll(/data-reading-order="(\d+)"/g)].map((match) => Number(match[1])).sort((a, b) => a - b);
 if (!storiesHtml.includes('data-filter="reading-order"')) failures.push('Stories page: missing Read in Order control');
-if (orderedCards.length !== 25 || orderedCards.some((value, index) => value !== index)) {
-  failures.push(`Stories page: expected a continuous 25-story reading order, found ${orderedCards.length}`);
+const expectedOrderedStories = 25 + localPosts.length;
+if (orderedCards.length !== expectedOrderedStories || orderedCards.some((value, index) => value !== index)) {
+  failures.push(`Stories page: expected a continuous ${expectedOrderedStories}-story reading order, found ${orderedCards.length}`);
 }
 
 if (failures.length) {
