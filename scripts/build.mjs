@@ -138,9 +138,12 @@ function footer(prefix) {
   </footer>`;
 }
 
-function layout({ route = '', title, description, active, body }) {
+function layout({ route = '', title, description, active, body, socialImage, socialImageAlt }) {
   const prefix = prefixFor(route);
-  return `<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="${esc(description)}"><meta name="theme-color" content="#11100e"><link rel="icon" type="image/png" href="${prefix}assets/images/favicon.png"><title>${esc(title)} — Cell to Self</title><link rel="stylesheet" href="${prefix}styles.css?v=20260912-1"></head><body id="top">${header(prefix, active)}<main id="main-content">${body}</main>${footer(prefix)}<script src="${prefix}main.js?v=20260912-1"></script></body></html>`;
+  const pageTitle = `${title} — Cell to Self`;
+  const canonicalUrl = `https://www.celltoself.com/${route ? `${route}/` : ''}`;
+  const socialTags = socialImage ? `<link rel="canonical" href="${esc(canonicalUrl)}"><meta property="og:title" content="${esc(pageTitle)}"><meta property="og:description" content="${esc(description)}"><meta property="og:type" content="article"><meta property="og:url" content="${esc(canonicalUrl)}"><meta property="og:site_name" content="Cell to Self"><meta property="og:image" content="${esc(socialImage)}"><meta property="og:image:alt" content="${esc(socialImageAlt)}"><meta property="og:image:type" content="image/jpeg"><meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="${esc(pageTitle)}"><meta name="twitter:description" content="${esc(description)}"><meta name="twitter:image" content="${esc(socialImage)}"><meta name="twitter:image:alt" content="${esc(socialImageAlt)}">` : '';
+  return `<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="${esc(description)}"><meta name="theme-color" content="#11100e">${socialTags}<link rel="icon" type="image/png" href="${prefix}assets/images/amy-favicon.png"><title>${esc(pageTitle)}</title><link rel="stylesheet" href="${prefix}styles.css?v=20260912-1"></head><body id="top">${header(prefix, active)}<main id="main-content">${body}</main>${footer(prefix)}<script src="${prefix}main.js?v=20260912-1"></script></body></html>`;
 }
 
 function storyCard(post, prefix, index = 0, hidden = false) {
@@ -195,7 +198,10 @@ for (let index = 0; index < data.posts.length; index += 1) {
   const prefix = prefixFor(route);
   const cat = category(post);
   const body = `<article class="story-page"><header class="article-header"><a class="back-link" href="${prefix}stories/">Back to Stories</a><p class="story-meta"><a href="${prefix}category/${cat.slug}/">${esc(cat.name)}</a>${writtenTimeline(post)}</p><h1>${esc(post.title)}</h1>${post.featuredImage ? `<img class="article-featured" src="${localMediaUrl(post.featuredImage, prefix)}" alt="${esc(post.featuredImageAlt || decode(post.title))}">` : ''}</header><div class="article-content">${writtenTimelineOverrides[post.slug] ? `<p class="story-timeline-intro">${writtenTimelineLabel(post)}</p>` : ''}${cleanArticle(post.content, prefix)}</div><nav class="story-pagination" aria-label="Story navigation">${previous ? `<a href="${prefix}${postRoute(previous)}/"><span>Previous Story</span><strong>${esc(previous.title)}</strong></a>` : '<span></span>'}${next ? `<a href="${prefix}${postRoute(next)}/"><span>Next Story</span><strong>${esc(next.title)}</strong></a>` : '<span></span>'}</nav><section class="article-subscribe"><p class="eyebrow">The story is still unfolding</p><h2>Stay connected.</h2><p>Email subscription is coming soon. Until then, explore the complete archive.</p><a class="button-link" href="${prefix}stories/">Explore All Stories</a></section></article>`;
-  await save(route, layout({ route, title: strip(post.title), description: strip(post.excerpt || post.content).slice(0, 155), active: 'stories', body }));
+  const socialImage = post.featuredImage
+    ? `https://www.celltoself.com${localMediaUrl(post.featuredImage, '').replace(/\.webp$/i, '.jpg').replace(/^/, '/')}`
+    : undefined;
+  await save(route, layout({ route, title: strip(post.title), description: strip(post.excerpt || post.content).slice(0, 155), active: 'stories', body, socialImage, socialImageAlt: post.featuredImageAlt || strip(post.title) }));
 }
 
 console.log(`Built ${data.posts.length} story pages, ${data.categories.length} category pages, and 6 core pages.`);

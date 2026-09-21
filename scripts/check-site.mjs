@@ -43,6 +43,23 @@ for (const file of htmlFiles) {
 
 const importedData = JSON.parse(await readFile(path.join(root, 'content', 'wordpress.json'), 'utf8'));
 const localPosts = JSON.parse(await readFile(path.join(root, 'content', 'local-posts.json'), 'utf8'));
+for (const post of [...localPosts, ...importedData.posts]) {
+  const [year, month, day] = post.date.slice(0, 10).split('-');
+  const route = `${year}/${month}/${day}/${post.slug}`;
+  const html = await readFile(path.join(root, route, 'index.html'), 'utf8');
+  const mediaPath = post.featuredImage.match(/\/wp-content\/uploads\/([^?]+)/)?.[1]
+    ?.replace(/\.(?:png|jpe?g)$/i, '.jpg');
+  if (!mediaPath) {
+    failures.push(`${route}: missing featured image for social sharing`);
+    continue;
+  }
+  const imageUrl = `https://www.celltoself.com/assets/media/${mediaPath}`;
+  if (!html.includes(`<meta property="og:image" content="${imageUrl}">`) || !html.includes(`<meta name="twitter:image" content="${imageUrl}">`)) {
+    failures.push(`${route}: featured image is not used for link previews`);
+  }
+  try { await access(path.join(root, 'assets', 'media', mediaPath)); }
+  catch { failures.push(`${route}: missing social image ${mediaPath}`); }
+}
 const expectedPages = 1 + 6 + importedData.categories.length + importedData.posts.length + localPosts.length;
 if (htmlFiles.length !== expectedPages) failures.push(`Expected ${expectedPages} HTML pages, found ${htmlFiles.length}`);
 
