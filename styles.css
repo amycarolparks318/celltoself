@@ -96,6 +96,22 @@ footer{background:var(--ink);color:var(--cream);display:flex;justify-content:spa
 .article-content h2 { font-size: clamp(2rem, 4vw, 3.2rem); }
 .article-content h3 { font-size: clamp(1.35rem, 3vw, 2rem); }
 .article-content img { display: block; max-width: 100%; height: auto; margin: 2.5rem auto; }
+.story-page--the-other-side-of-a-second-chance .article-header { max-width: 900px; margin-inline: auto; }
+.story-page--the-other-side-of-a-second-chance .article-featured { display: block; width: min(100%, 560px); max-height: none; margin: 2.25rem auto 0; object-fit: contain; }
+.story-page--the-other-side-of-a-second-chance .second-chance-image { width: min(100%, 620px); margin: 2.25rem auto; }
+.story-page--the-other-side-of-a-second-chance .second-chance-image--portrait { width: min(100%, 500px); }
+.story-page--the-other-side-of-a-second-chance .second-chance-image--photo { width: min(100%, 540px); }
+.story-page--the-other-side-of-a-second-chance .second-chance-image img,
+.story-page--the-other-side-of-a-second-chance .second-chance-image-pair img { width: 100%; margin: 0; border-radius: 3px; box-shadow: 0 12px 30px rgba(31, 26, 22, .12); }
+.story-page--the-other-side-of-a-second-chance .second-chance-image-pair { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1rem; width: min(100%, 700px); margin: 2.25rem auto; align-items: start; }
+.story-page--the-other-side-of-a-second-chance .second-chance-image-pair figure { margin: 0; }
+@media (max-width: 600px) {
+  .story-page--the-other-side-of-a-second-chance .article-featured { width: min(92%, 500px); }
+  .story-page--the-other-side-of-a-second-chance .second-chance-image,
+  .story-page--the-other-side-of-a-second-chance .second-chance-image--portrait,
+  .story-page--the-other-side-of-a-second-chance .second-chance-image--photo { width: min(92%, 520px); }
+  .story-page--the-other-side-of-a-second-chance .second-chance-image-pair { grid-template-columns: 1fr; width: min(92%, 500px); }
+}
 .article-content blockquote { margin: 2.5rem 0; padding: .5rem 0 .5rem 1.5rem; border-left: 5px solid var(--rose); font-size: 1.15em; font-style: italic; }
 .article-content a { color: var(--teal-deep); text-decoration-thickness: 2px; }
 .start-categories, .recommended-story, .support-note { width: min(100%, 900px); margin: 5rem auto 0; }

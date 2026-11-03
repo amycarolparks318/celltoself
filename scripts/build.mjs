@@ -1,4 +1,5 @@
 import { readFile, mkdir, writeFile } from 'node:fs/promises';
+import { existsSync } from 'node:fs';
 import path from 'node:path';
 
 const importedData = JSON.parse(await readFile('content/wordpress.json', 'utf8'));
@@ -101,14 +102,19 @@ function cleanArticle(html, prefix = '../') {
   return html
     .replace(/<div class="wp-block-buttons[\s\S]*$/i, '')
     .replace(/\s(?:srcset|sizes|data-[\w-]+)="[^"]*"/g, '')
-    .replace(/https:\/\/(?:i0\.wp\.com\/)?celltoself\.com\/wp-content\/uploads\/([^"'<\s?]+)(?:\?[^"'<\s]*)?/gi, (_, mediaPath) => `${prefix}assets/media/${mediaPath.replace(/\.(?:png|jpe?g)$/i, '.webp')}`)
+    .replace(/https:\/\/(?:i0\.wp\.com\/)?celltoself\.com\/wp-content\/uploads\/([^"'<\s?]+)(?:\?[^"'<\s]*)?/gi, (_, mediaPath) => `${prefix}assets/media/${preferredMediaPath(mediaPath)}`)
     .replace(/href="https:\/\/celltoself\.com\//g, `href="${prefix}`);
+}
+
+function preferredMediaPath(mediaPath) {
+  const webpPath = mediaPath.replace(/\.(?:png|jpe?g)$/i, '.webp');
+  return existsSync(path.join('assets', 'media', webpPath)) ? webpPath : mediaPath;
 }
 
 function localMediaUrl(url, prefix) {
   if (!url) return '';
   const match = url.match(/^https:\/\/(?:i0\.wp\.com\/)?celltoself\.com\/wp-content\/uploads\/([^?]+)(?:\?.*)?$/i);
-  return match ? `${prefix}assets/media/${match[1].replace(/\.(?:png|jpe?g)$/i, '.webp')}` : url;
+  return match ? `${prefix}assets/media/${preferredMediaPath(match[1])}` : url;
 }
 
 function header(prefix, active = '') {
@@ -197,7 +203,7 @@ for (let index = 0; index < data.posts.length; index += 1) {
   const next = orderedIndex === undefined ? data.posts[index - 1] : readingOrder[orderedIndex + 1];
   const prefix = prefixFor(route);
   const cat = category(post);
-  const body = `<article class="story-page"><header class="article-header"><a class="back-link" href="${prefix}stories/">Back to Stories</a><p class="story-meta"><a href="${prefix}category/${cat.slug}/">${esc(cat.name)}</a>${writtenTimeline(post)}</p><h1>${esc(post.title)}</h1>${post.featuredImage ? `<img class="article-featured" src="${localMediaUrl(post.featuredImage, prefix)}" alt="${esc(post.featuredImageAlt || decode(post.title))}">` : ''}</header><div class="article-content">${writtenTimelineOverrides[post.slug] ? `<p class="story-timeline-intro">${writtenTimelineLabel(post)}</p>` : ''}${cleanArticle(post.content, prefix)}</div><nav class="story-pagination" aria-label="Story navigation">${previous ? `<a href="${prefix}${postRoute(previous)}/"><span>Previous Story</span><strong>${esc(previous.title)}</strong></a>` : '<span></span>'}${next ? `<a href="${prefix}${postRoute(next)}/"><span>Next Story</span><strong>${esc(next.title)}</strong></a>` : '<span></span>'}</nav><section class="article-subscribe"><p class="eyebrow">The story is still unfolding</p><h2>Stay connected.</h2><p>Email subscription is coming soon. Until then, explore the complete archive.</p><a class="button-link" href="${prefix}stories/">Explore All Stories</a></section></article>`;
+  const body = `<article class="story-page${post.slug === 'the-other-side-of-a-second-chance' ? ' story-page--the-other-side-of-a-second-chance' : ''}"><header class="article-header"><a class="back-link" href="${prefix}stories/">Back to Stories</a><p class="story-meta"><a href="${prefix}category/${cat.slug}/">${esc(cat.name)}</a>${writtenTimeline(post)}</p><h1>${esc(post.title)}</h1>${post.featuredImage ? `<img class="article-featured" src="${localMediaUrl(post.featuredImage, prefix)}" alt="${esc(post.featuredImageAlt || decode(post.title))}">` : ''}</header><div class="article-content">${writtenTimelineOverrides[post.slug] ? `<p class="story-timeline-intro">${writtenTimelineLabel(post)}</p>` : ''}${cleanArticle(post.content, prefix)}</div><nav class="story-pagination" aria-label="Story navigation">${previous ? `<a href="${prefix}${postRoute(previous)}/"><span>Previous Story</span><strong>${esc(previous.title)}</strong></a>` : '<span></span>'}${next ? `<a href="${prefix}${postRoute(next)}/"><span>Next Story</span><strong>${esc(next.title)}</strong></a>` : '<span></span>'}</nav><section class="article-subscribe"><p class="eyebrow">The story is still unfolding</p><h2>Stay connected.</h2><p>Email subscription is coming soon. Until then, explore the complete archive.</p><a class="button-link" href="${prefix}stories/">Explore All Stories</a></section></article>`;
   const socialImage = post.featuredImage
     ? `https://www.celltoself.com${localMediaUrl(post.featuredImage, '').replace(/\.webp$/i, '.jpg').replace(/^/, '/')}`
     : undefined;
