@@ -105,12 +105,20 @@ footer{background:var(--ink);color:var(--cream);display:flex;justify-content:spa
 .story-page--the-other-side-of-a-second-chance .second-chance-image-pair img { width: 100%; margin: 0; border-radius: 3px; box-shadow: 0 12px 30px rgba(31, 26, 22, .12); }
 .story-page--the-other-side-of-a-second-chance .second-chance-image-pair { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1rem; width: min(100%, 700px); margin: 2.25rem auto; align-items: start; }
 .story-page--the-other-side-of-a-second-chance .second-chance-image-pair figure { margin: 0; }
+.story-page--the-other-side-of-a-second-chance .article-content::after { content: ""; display: block; clear: both; }
+.story-page--the-other-side-of-a-second-chance .second-chance-woven { width: min(42%, 310px); margin: .6rem 0 1.35rem 1.75rem; float: right; clear: right; }
+.story-page--the-other-side-of-a-second-chance .second-chance-woven--left { margin: .6rem 1.75rem 1.35rem 0; float: left; clear: left; }
+.story-page--the-other-side-of-a-second-chance .second-chance-woven--wide { width: min(46%, 340px); }
+.story-page--the-other-side-of-a-second-chance .second-chance-woven img { width: 100%; margin: 0; filter: saturate(.88) contrast(.96); -webkit-mask-image: radial-gradient(ellipse 98% 94% at center, #000 72%, transparent 100%); mask-image: radial-gradient(ellipse 98% 94% at center, #000 72%, transparent 100%); }
 @media (max-width: 600px) {
   .story-page--the-other-side-of-a-second-chance .article-featured { width: min(92%, 500px); }
   .story-page--the-other-side-of-a-second-chance .second-chance-image,
   .story-page--the-other-side-of-a-second-chance .second-chance-image--portrait,
   .story-page--the-other-side-of-a-second-chance .second-chance-image--photo { width: min(92%, 520px); }
   .story-page--the-other-side-of-a-second-chance .second-chance-image-pair { grid-template-columns: 1fr; width: min(92%, 500px); }
+  .story-page--the-other-side-of-a-second-chance .second-chance-woven,
+  .story-page--the-other-side-of-a-second-chance .second-chance-woven--left,
+  .story-page--the-other-side-of-a-second-chance .second-chance-woven--wide { width: min(88%, 440px); margin: 1.5rem auto; float: none; clear: both; }
 }
 .article-content blockquote { margin: 2.5rem 0; padding: .5rem 0 .5rem 1.5rem; border-left: 5px solid var(--rose); font-size: 1.15em; font-style: italic; }
 .article-content a { color: var(--teal-deep); text-decoration-thickness: 2px; }
