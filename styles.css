@@ -98,27 +98,29 @@ footer{background:var(--ink);color:var(--cream);display:flex;justify-content:spa
 .article-content img { display: block; max-width: 100%; height: auto; margin: 2.5rem auto; }
 .story-page--the-other-side-of-a-second-chance .article-header { max-width: 900px; margin-inline: auto; }
 .story-page--the-other-side-of-a-second-chance .article-featured { display: block; width: min(100%, 860px); max-height: none; margin: 2.25rem auto 0; object-fit: contain; }
-.story-page--the-other-side-of-a-second-chance .second-chance-image { width: min(100%, 620px); margin: 2.25rem auto; }
+.story-page--the-other-side-of-a-second-chance .second-chance-image { width: min(100%, 720px); margin: 2.25rem auto; }
 .story-page--the-other-side-of-a-second-chance .second-chance-image--portrait { width: min(100%, 500px); }
 .story-page--the-other-side-of-a-second-chance .second-chance-image--photo { width: min(100%, 540px); }
-.story-page--the-other-side-of-a-second-chance .second-chance-image--small-strip { width: min(100%, 590px); }
-.story-page--the-other-side-of-a-second-chance .second-chance-image--small-strip img { box-shadow: none; mix-blend-mode: multiply; -webkit-mask-image: radial-gradient(ellipse 92% 88% at center, #000 56%, rgba(0,0,0,.88) 70%, transparent 100%); mask-image: radial-gradient(ellipse 92% 88% at center, #000 56%, rgba(0,0,0,.88) 70%, transparent 100%); }
+.story-page--the-other-side-of-a-second-chance .second-chance-image--small-strip { width: min(100%, 700px); }
+.story-page--the-other-side-of-a-second-chance .second-chance-image--small-strip img { box-shadow: none; -webkit-mask-image: radial-gradient(ellipse 100% 96% at center, #000 82%, transparent 100%); mask-image: radial-gradient(ellipse 100% 96% at center, #000 82%, transparent 100%); }
 .story-page--the-other-side-of-a-second-chance .second-chance-image img,
 .story-page--the-other-side-of-a-second-chance .second-chance-image-pair img { width: 100%; margin: 0; border-radius: 3px; box-shadow: 0 12px 30px rgba(31, 26, 22, .12); }
-.story-page--the-other-side-of-a-second-chance .second-chance-image-pair { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1rem; width: min(100%, 700px); margin: 2.25rem auto; align-items: start; }
+.story-page--the-other-side-of-a-second-chance .second-chance-image:not(.second-chance-image--photo) img,
+.story-page--the-other-side-of-a-second-chance .second-chance-image-pair img { filter: contrast(1.14) saturate(1.03); }
+.story-page--the-other-side-of-a-second-chance .second-chance-image-pair { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1rem; width: min(100%, 820px); margin: 2.25rem auto; align-items: start; }
 .story-page--the-other-side-of-a-second-chance .second-chance-image-pair figure { margin: 0; }
 .story-page--the-other-side-of-a-second-chance .article-content::after { content: ""; display: block; clear: both; }
-.story-page--the-other-side-of-a-second-chance .second-chance-woven { width: min(42%, 310px); margin: .6rem 0 1.35rem 1.75rem; float: right; clear: right; }
+.story-page--the-other-side-of-a-second-chance .second-chance-woven { width: min(48%, 380px); margin: .6rem 0 1.35rem 1.75rem; float: right; clear: right; }
 .story-page--the-other-side-of-a-second-chance .second-chance-woven--left { margin: .6rem 1.75rem 1.35rem 0; float: left; clear: left; }
-.story-page--the-other-side-of-a-second-chance .second-chance-woven--wide { width: min(46%, 340px); }
-.story-page--the-other-side-of-a-second-chance .second-chance-woven img { width: 100%; margin: 0; filter: saturate(.88) contrast(.96); -webkit-mask-image: radial-gradient(ellipse 98% 94% at center, #000 72%, transparent 100%); mask-image: radial-gradient(ellipse 98% 94% at center, #000 72%, transparent 100%); }
+.story-page--the-other-side-of-a-second-chance .second-chance-woven--wide { width: min(52%, 420px); }
+.story-page--the-other-side-of-a-second-chance .second-chance-woven img { width: 100%; margin: 0; filter: contrast(1.14) saturate(1.02); -webkit-mask-image: radial-gradient(ellipse 100% 98% at center, #000 86%, transparent 100%); mask-image: radial-gradient(ellipse 100% 98% at center, #000 86%, transparent 100%); }
 @media (max-width: 600px) {
   .story-page--the-other-side-of-a-second-chance .article-featured { width: min(94%, 760px); }
   .story-page--the-other-side-of-a-second-chance .second-chance-image,
   .story-page--the-other-side-of-a-second-chance .second-chance-image--portrait,
   .story-page--the-other-side-of-a-second-chance .second-chance-image--photo { width: min(92%, 520px); }
-  .story-page--the-other-side-of-a-second-chance .second-chance-image--small-strip { width: min(94%, 560px); }
-  .story-page--the-other-side-of-a-second-chance .second-chance-image-pair { grid-template-columns: 1fr; width: min(92%, 500px); }
+  .story-page--the-other-side-of-a-second-chance .second-chance-image--small-strip { width: min(96%, 680px); }
+  .story-page--the-other-side-of-a-second-chance .second-chance-image-pair { grid-template-columns: 1fr; width: min(96%, 620px); }
   .story-page--the-other-side-of-a-second-chance .second-chance-woven,
   .story-page--the-other-side-of-a-second-chance .second-chance-woven--left,
   .story-page--the-other-side-of-a-second-chance .second-chance-woven--wide { width: min(88%, 440px); margin: 1.5rem auto; float: none; clear: both; }
