@@ -102,7 +102,7 @@ footer{background:var(--ink);color:var(--cream);display:flex;justify-content:spa
 .story-page--the-other-side-of-a-second-chance .second-chance-image--portrait { width: min(100%, 500px); }
 .story-page--the-other-side-of-a-second-chance .second-chance-image--photo { width: min(100%, 540px); }
 .story-page--the-other-side-of-a-second-chance .second-chance-image--small-strip { width: min(100%, 590px); }
-.story-page--the-other-side-of-a-second-chance .second-chance-image--small-strip img { box-shadow: none; -webkit-mask-image: radial-gradient(ellipse 98% 94% at center, #000 70%, transparent 100%); mask-image: radial-gradient(ellipse 98% 94% at center, #000 70%, transparent 100%); }
+.story-page--the-other-side-of-a-second-chance .second-chance-image--small-strip img { box-shadow: none; mix-blend-mode: multiply; -webkit-mask-image: radial-gradient(ellipse 92% 88% at center, #000 56%, rgba(0,0,0,.88) 70%, transparent 100%); mask-image: radial-gradient(ellipse 92% 88% at center, #000 56%, rgba(0,0,0,.88) 70%, transparent 100%); }
 .story-page--the-other-side-of-a-second-chance .second-chance-image img,
 .story-page--the-other-side-of-a-second-chance .second-chance-image-pair img { width: 100%; margin: 0; border-radius: 3px; box-shadow: 0 12px 30px rgba(31, 26, 22, .12); }
 .story-page--the-other-side-of-a-second-chance .second-chance-image-pair { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1rem; width: min(100%, 700px); margin: 2.25rem auto; align-items: start; }
