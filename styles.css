@@ -115,6 +115,9 @@ footer{background:var(--ink);color:var(--cream);display:flex;justify-content:spa
 .story-page--the-other-side-of-a-second-chance .second-chance-woven--left { margin: .6rem 1.75rem 1.35rem 0; float: left; clear: left; }
 .story-page--the-other-side-of-a-second-chance .second-chance-woven--wide { width: min(52%, 420px); }
 .story-page--the-other-side-of-a-second-chance .second-chance-woven img { width: 100%; margin: 0; filter: contrast(1.26) saturate(1.03) brightness(1.02); }
+.story-page--the-other-side-of-a-second-chance .second-chance-image:not(.second-chance-image--photo) img,
+.story-page--the-other-side-of-a-second-chance .second-chance-image-pair img,
+.story-page--the-other-side-of-a-second-chance .second-chance-woven img { box-shadow: none; filter: contrast(1.26) saturate(1.03) brightness(1.02) drop-shadow(0 12px 14px rgba(31, 26, 22, .18)); }
 @media (max-width: 600px) {
   .story-page--the-other-side-of-a-second-chance .article-featured { width: min(94%, 760px); }
   .story-page--the-other-side-of-a-second-chance .second-chance-image,
