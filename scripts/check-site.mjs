@@ -2,7 +2,7 @@ import { access, readFile, readdir } from 'node:fs/promises';
 import path from 'node:path';
 
 const root = process.cwd();
-const ignored = new Set(['.git', 'node_modules', 'content', 'scripts']);
+const ignored = new Set(['.git', 'node_modules', 'content', 'scripts', 'sunrise']); // sunrise/ is the standalone Cell to Sunrise app
 const htmlFiles = [];
 
 async function walk(directory) {
