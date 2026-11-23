@@ -68,7 +68,22 @@ document.querySelector('[data-load-more]')?.addEventListener('click', (event) =>
 
 const contactForm = document.querySelector('[data-contact-form]');
 const formSuccess = document.querySelector('[data-form-success]');
-if (contactForm && formSuccess && new URLSearchParams(window.location.search).get('sent') === '1') {
+const contactParams = new URLSearchParams(window.location.search);
+const commentPost = contactParams.get('post')?.trim().slice(0, 160);
+if (contactForm && commentPost) {
+  const subject = contactForm.querySelector('input[name="_subject"]');
+  if (subject) subject.value = `Comment on “${commentPost}”`;
+  const postField = document.createElement('input');
+  postField.type = 'hidden';
+  postField.name = 'Regarding post';
+  postField.value = commentPost;
+  contactForm.append(postField);
+  const context = document.createElement('p');
+  context.className = 'comment-context';
+  context.textContent = `You’re commenting on: ${commentPost}`;
+  contactForm.before(context);
+}
+if (contactForm && formSuccess && contactParams.get('sent') === '1') {
   formSuccess.hidden = false;
   contactForm.hidden = true;
   formSuccess.focus?.();

@@ -167,6 +167,12 @@ footer{background:var(--ink);color:var(--cream);display:flex;justify-content:spa
 .article-header { width: min(100%, 980px); margin: 0 auto 4rem; }
 .article-header h1 { margin: 2rem 0; font-size: clamp(3.2rem, 8vw, 7.5rem); line-height: .88; letter-spacing: -.065em; text-wrap: balance; }
 .article-featured { width: 100%; max-height: 690px; object-fit: cover; }
+.story-page--one-year-home .article-header { max-width: 820px; }
+.story-page--one-year-home .article-featured { display: block; width: min(100%, 720px); max-height: none; height: auto; margin-inline: auto; object-fit: contain; }
+.article-response { width: min(100%, 760px); margin: 3.25rem auto 0; padding-top: 1.4rem; border-top: 1px solid rgba(17,16,14,.28); }
+.article-response p { margin: 0 0 .8rem; font: italic 1.05rem/1.4 Georgia, serif; }
+.article-response small { display: block; margin-top: .65rem; color: #68615a; font-size: .78rem; }
+.article-comment-button { padding: .72rem 1rem; font-size: .74rem; }
 .story-pagination { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; width: min(100%, 900px); margin: 5rem auto; }
 .story-pagination a { display: flex; flex-direction: column; gap: .4rem; border-top: 1px solid var(--ink); padding-top: 1rem; color: var(--ink); text-decoration: none; }
 .story-pagination a:last-child { text-align: right; }
@@ -186,6 +192,7 @@ footer{background:var(--ink);color:var(--cream);display:flex;justify-content:spa
 .contact-form .button-link { justify-self: start; margin-top: 1rem; border: 0; cursor: pointer; }
 .form-honeypot { position: absolute !important; left: -10000px !important; width: 1px !important; height: 1px !important; overflow: hidden !important; }
 .form-success { margin: 1.5rem 0; border-left: .35rem solid var(--teal); padding: 1rem 1.15rem; background: #fffaf1; font-weight: 700; }
+.comment-context { margin: 1.25rem 0 0; padding: .85rem 1rem; border-left: .3rem solid var(--teal); background: #fffaf1; font: 700 1rem/1.45 Georgia, serif; }
 .connection-options { border-top: 8px solid var(--teal); padding-top: 1.5rem; }
 .connection-options h2 { font-size: clamp(2rem, 4vw, 3.4rem); }
 .connection-options h3 { margin: 2.5rem 0 .4rem; font-family: Arial, sans-serif; font-size: .78rem; letter-spacing: .08em; text-transform: uppercase; }
