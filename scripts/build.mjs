@@ -123,6 +123,7 @@ function header(prefix, active = '') {
     ['start', 'Start Here', `${prefix}start-here/`],
     ['stories', 'Stories', `${prefix}stories/`],
     ['pals', 'Dear Prison Pals', `${prefix}dear-prison-pals/`],
+    ['reentry', 'Reentry', `${prefix}sunrise/`],
     ['about', 'About Amy', `${prefix}about/`],
     ['connect', 'Stay Connected', `${prefix}stay-connected/`],
   ];
@@ -138,7 +139,7 @@ function footer(prefix) {
   const facebookIcon = '<svg class="facebook-icon" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M24 12.07C24 5.4 18.63 0 12 0S0 5.4 0 12.07C0 18.1 4.39 23.1 10.13 24v-8.44H7.08v-3.49h3.05V9.41c0-3.03 1.79-4.7 4.53-4.7 1.31 0 2.68.24 2.68.24v2.97h-1.51c-1.49 0-1.96.93-1.96 1.89v2.26h3.33l-.53 3.49h-2.8V24C19.61 23.1 24 18.1 24 12.07Z"/></svg>';
   return `<footer class="site-footer">
     <div class="footer-brand"><img class="footer-logo" src="${prefix}assets/images/cell-to-self-horizontal-logo.webp" alt="Cell to Self"><p>Real life after prison, written in real time—without polish or pretending.</p></div>
-    <nav aria-label="Footer navigation"><a href="${prefix}index.html">Home</a><a href="${prefix}start-here/">Start Here</a><a href="${prefix}stories/">Stories</a><a href="${prefix}dear-prison-pals/">Dear Prison Pals</a><a href="${prefix}about/">About Amy</a></nav>
+    <nav aria-label="Footer navigation"><a href="${prefix}index.html">Home</a><a href="${prefix}start-here/">Start Here</a><a href="${prefix}stories/">Stories</a><a href="${prefix}dear-prison-pals/">Dear Prison Pals</a><a href="${prefix}sunrise/">Reentry</a><a href="${prefix}about/">About Amy</a></nav>
     <div class="footer-connect"><strong>Stay connected</strong><div class="footer-socials"><a href="https://www.facebook.com/cell2self">${facebookIcon}<span>Cell to Self</span></a><a href="https://www.facebook.com/amycarolparks/">${facebookIcon}<span>Amy Parks</span></a></div><a href="${prefix}stay-connected/">Contact Amy</a></div>
     <div class="footer-legal"><span>© ${new Date().getFullYear()} Cell to Self</span><a href="${prefix}privacy/">Privacy</a><a href="#top">Back to Top</a></div>
   </footer>`;
@@ -149,7 +150,7 @@ function layout({ route = '', title, description, active, body, socialImage, soc
   const pageTitle = `${title} — Cell to Self`;
   const canonicalUrl = `https://www.celltoself.com/${route ? `${route}/` : ''}`;
   const socialTags = socialImage ? `<link rel="canonical" href="${esc(canonicalUrl)}"><meta property="og:title" content="${esc(pageTitle)}"><meta property="og:description" content="${esc(description)}"><meta property="og:type" content="article"><meta property="og:url" content="${esc(canonicalUrl)}"><meta property="og:site_name" content="Cell to Self"><meta property="og:image" content="${esc(socialImage)}"><meta property="og:image:alt" content="${esc(socialImageAlt)}"><meta property="og:image:type" content="image/jpeg"><meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="${esc(pageTitle)}"><meta name="twitter:description" content="${esc(description)}"><meta name="twitter:image" content="${esc(socialImage)}"><meta name="twitter:image:alt" content="${esc(socialImageAlt)}">` : '';
-  return `<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="${esc(description)}"><meta name="theme-color" content="#11100e">${socialTags}<link rel="icon" type="image/png" href="${prefix}assets/images/amy-favicon.png"><title>${esc(pageTitle)}</title><link rel="stylesheet" href="${prefix}styles.css?v=20261122-3"></head><body id="top">${header(prefix, active)}<main id="main-content">${body}</main>${footer(prefix)}<script src="${prefix}main.js?v=20261122-3"></script></body></html>`;
+  return `<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="${esc(description)}"><meta name="theme-color" content="#11100e">${socialTags}<link rel="icon" type="image/png" href="${prefix}assets/images/amy-favicon.png"><title>${esc(pageTitle)}</title><link rel="stylesheet" href="${prefix}styles.css?v=20261123-1"></head><body id="top">${header(prefix, active)}<main id="main-content">${body}</main>${footer(prefix)}<script src="${prefix}main.js?v=20261123-1"></script></body></html>`;
 }
 
 function storyCard(post, prefix, index = 0, hidden = false) {

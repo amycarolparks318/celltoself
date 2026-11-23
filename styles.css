@@ -28,11 +28,19 @@ footer{background:var(--ink);color:var(--cream);display:flex;justify-content:spa
 .dispatches{background:var(--rose)}
 .brand-signature{background:var(--cream);padding:clamp(3rem,7vw,6rem) clamp(1rem,8vw,8rem);display:grid;place-items:center;border-bottom:1px solid var(--ink)}
 .brand-signature img{display:block;width:min(70%,546px);height:auto;mix-blend-mode:multiply}
+.sunrise-callout{position:relative;display:grid;grid-template-columns:minmax(280px,.9fr) minmax(320px,1.1fr);align-items:center;gap:clamp(2.5rem,7vw,7rem);padding:clamp(4rem,8vw,8rem) clamp(1.25rem,7vw,7rem);overflow:hidden;background:#fcf8f1;border-bottom:1px solid var(--ink)}
+.sunrise-callout::after{content:"";position:absolute;width:clamp(180px,25vw,360px);aspect-ratio:1;border-radius:50%;right:-9%;bottom:-38%;background:#f7c03e;opacity:.3;pointer-events:none}
+.sunrise-callout-logo{position:relative;z-index:1;display:block;padding:clamp(1rem,3vw,2rem);background:#fcf8f1;border:1px solid rgba(17,16,14,.18);box-shadow:12px 12px 0 rgba(198,118,91,.35);transform:rotate(-1.5deg)}
+.sunrise-callout-logo img{display:block;width:100%;height:auto;mix-blend-mode:multiply}
+.sunrise-callout-copy{position:relative;z-index:1}
+.sunrise-callout-copy h2{max-width:8ch;margin:.6rem 0 1.2rem;font-size:clamp(3rem,6vw,6.3rem);line-height:.88;letter-spacing:-.06em}
+.sunrise-callout-copy p{max-width:40rem;font:1.15rem/1.65 Georgia,serif}
+.sunrise-link{margin-top:1rem;background:#c6765b}
 
 @media (min-width: 1101px) {
   .site-header:not(.global-header) { min-height: 110px; padding-inline: clamp(1.44rem, 4.8vw, 4.8rem); }
   .site-header:not(.global-header) .horizontal-logo { height: 91px; }
-  .site-header:not(.global-header) nav { gap: 2.4rem; font-size: .94rem; }
+  .site-header:not(.global-header) nav { gap: clamp(1.1rem, 1.8vw, 2rem); font-size: .94rem; }
 }
 
 @media(max-width:560px){
@@ -40,6 +48,9 @@ footer{background:var(--ink);color:var(--cream);display:flex;justify-content:spa
   .wordmark span,.wordmark i{display:none}
   .horizontal-logo{height:58px;max-width:175px}
   .brand-signature{padding:2.5rem 1rem}
+  .sunrise-callout{grid-template-columns:1fr;gap:2.5rem;padding:4rem 1rem}
+  .sunrise-callout-logo{width:min(94%,520px);margin-inline:auto;box-shadow:7px 7px 0 rgba(198,118,91,.35)}
+  .sunrise-callout-copy h2{font-size:clamp(3.1rem,16vw,5rem)}
   .hero-title .rewritten{font-size:23vw;padding-left:2vw;margin-top:-.06em;margin-bottom:-.04em}
   .hero-title .in-time{padding-right:0;text-align:left}
 }
