@@ -169,11 +169,11 @@ footer{background:var(--ink);color:var(--cream);display:flex;justify-content:spa
 .article-featured { width: 100%; max-height: 690px; object-fit: cover; }
 .story-page--one-year-home .article-header { max-width: 820px; }
 .story-page--one-year-home .article-featured { display: block; width: min(100%, 720px); max-height: none; height: auto; margin-inline: auto; object-fit: contain; }
-.article-response { width: min(100%, 760px); margin: 3.25rem auto 0; padding-top: 1.4rem; border-top: 1px solid rgba(17,16,14,.28); }
+.article-response { width: min(100%, 760px); margin: 3.25rem auto 5rem; padding-top: 1.4rem; border-top: 1px solid rgba(17,16,14,.28); }
 .article-response p { margin: 0 0 .8rem; font: italic 1.05rem/1.4 Georgia, serif; }
 .article-response small { display: block; margin-top: .65rem; color: #68615a; font-size: .78rem; }
 .article-comment-button { padding: .72rem 1rem; font-size: .74rem; }
-.story-pagination { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; width: min(100%, 900px); margin: 5rem auto; }
+.story-pagination { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; width: min(100%, 900px); margin: 5rem auto 0; }
 .story-pagination a { display: flex; flex-direction: column; gap: .4rem; border-top: 1px solid var(--ink); padding-top: 1rem; color: var(--ink); text-decoration: none; }
 .story-pagination a:last-child { text-align: right; }
 .story-pagination span { font-size: .7rem; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; }
