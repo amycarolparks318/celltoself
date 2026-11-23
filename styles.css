@@ -173,6 +173,8 @@ footer{background:var(--ink);color:var(--cream);display:flex;justify-content:spa
 .article-response p { margin: 0 0 .8rem; font: italic 1.05rem/1.4 Georgia, serif; }
 .article-response small { display: block; margin-top: .65rem; color: #68615a; font-size: .78rem; }
 .article-comment-button { padding: .72rem 1rem; font-size: .74rem; }
+.article-updates-button { margin-left: .7rem; padding: .72rem 1rem; border: 1px solid var(--ink); background: transparent; color: var(--ink); font-size: .74rem; }
+.article-updates-button:hover, .article-updates-button:focus-visible { background: var(--ink); color: var(--paper); }
 .story-pagination { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; width: min(100%, 900px); margin: 5rem auto 0; }
 .story-pagination a { display: flex; flex-direction: column; gap: .4rem; border-top: 1px solid var(--ink); padding-top: 1rem; color: var(--ink); text-decoration: none; }
 .story-pagination a:last-child { text-align: right; }
@@ -249,6 +251,7 @@ footer{background:var(--ink);color:var(--cream);display:flex;justify-content:spa
   .start-category-list { grid-template-columns: 1fr; }
   .story-pagination { grid-template-columns: 1fr; }
   .story-pagination a:last-child { text-align: left; }
+  .article-updates-button { display: table; margin: .7rem 0 0; }
   .site-footer { grid-template-columns: 1fr; }
   .footer-legal { grid-column: auto; }
   .site-footer p { order: initial; width: auto; }

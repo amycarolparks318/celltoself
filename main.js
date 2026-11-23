@@ -70,6 +70,10 @@ const contactForm = document.querySelector('[data-contact-form]');
 const formSuccess = document.querySelector('[data-form-success]');
 const contactParams = new URLSearchParams(window.location.search);
 const commentPost = contactParams.get('post')?.trim().slice(0, 160);
+const wantsUpdates = contactParams.get('subscribe') === '1';
+const subscriptionCheckbox = contactForm?.querySelector('#contact-subscribe');
+const subscriptionLabel = subscriptionCheckbox?.closest('label')?.querySelector('span');
+if (subscriptionLabel) subscriptionLabel.textContent = 'Yes, email me when Amy publishes a new blog.';
 if (contactForm && commentPost) {
   const subject = contactForm.querySelector('input[name="_subject"]');
   if (subject) subject.value = `Comment on “${commentPost}”`;
@@ -83,6 +87,26 @@ if (contactForm && commentPost) {
   context.textContent = `You’re commenting on: ${commentPost}`;
   contactForm.before(context);
 }
+if (contactForm && wantsUpdates) {
+  const subject = contactForm.querySelector('input[name="_subject"]');
+  const message = contactForm.querySelector('#contact-message');
+  const submit = contactForm.querySelector('button[type="submit"]');
+  if (subject) subject.value = 'New Cell to Self blog update signup';
+  if (subscriptionCheckbox) subscriptionCheckbox.checked = true;
+  if (message && !message.value) message.value = 'Please add me to the Cell to Self new blog update list.';
+  if (submit) submit.textContent = 'Sign up for updates';
+  const context = document.createElement('p');
+  context.className = 'comment-context';
+  context.textContent = 'Enter your email below to hear when Amy publishes a new blog.';
+  contactForm.before(context);
+}
+document.querySelectorAll('.story-page .article-response .article-comment-button').forEach((commentButton) => {
+  const updatesButton = document.createElement('a');
+  updatesButton.className = 'button-link article-updates-button';
+  updatesButton.href = '/stay-connected/?subscribe=1#contact-form';
+  updatesButton.textContent = 'Get new blog updates';
+  commentButton.after(updatesButton);
+});
 if (contactForm && formSuccess && contactParams.get('sent') === '1') {
   formSuccess.hidden = false;
   contactForm.hidden = true;
