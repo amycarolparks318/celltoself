@@ -89,7 +89,7 @@ while (orderedPost && !visitedRoutes.has(postRoute(orderedPost))) {
   visitedRoutes.add(route);
   orderedPost = postsByRoute.get(readNextRoute(orderedPost));
 }
-for (const slug of ['hey-thats-mine', 'sometimes-home-was-hayley', 'nothing-exciting-to-report', 'the-stuff-in-the-shower', 'here-in-the-waiting', 'you-get-to-decide', 'the-other-side-of-a-second-chance', 'a-little-busy-a-lot-blessed', 'one-year-home-an-update-to-persevere']) {
+for (const slug of ['hey-thats-mine', 'sometimes-home-was-hayley', 'nothing-exciting-to-report', 'the-stuff-in-the-shower', 'here-in-the-waiting', 'you-get-to-decide', 'the-other-side-of-a-second-chance', 'a-little-busy-a-lot-blessed', 'one-year-home-an-update-to-persevere', 'the-future-i-was-afraid-to-invest-in']) {
   const post = data.posts.find((item) => item.slug === slug);
   if (post && !visitedRoutes.has(postRoute(post))) {
     readingOrder.push(post);
@@ -209,7 +209,7 @@ for (let index = 0; index < data.posts.length; index += 1) {
   const commentUrl = `${prefix}stay-connected/?post=${encodeURIComponent(strip(post.title))}#contact-form`;
   const body = `<article class="${storyClasses.join(' ')}"><header class="article-header"><a class="back-link" href="${prefix}stories/">Back to Stories</a><p class="story-meta"><a href="${prefix}category/${cat.slug}/">${esc(cat.name)}</a>${writtenTimeline(post)}</p><h1>${esc(post.title)}</h1>${post.featuredImage ? `<img class="article-featured" src="${localMediaUrl(post.featuredImage, prefix)}" alt="${esc(post.featuredImageAlt || decode(post.title))}">` : ''}</header><div class="article-content">${writtenTimelineOverrides[post.slug] ? `<p class="story-timeline-intro">${writtenTimelineLabel(post)}</p>` : ''}${cleanArticle(post.content, prefix)}</div><nav class="story-pagination" aria-label="Story navigation">${previous ? `<a href="${prefix}${postRoute(previous)}/"><span>Previous Story</span><strong>${esc(previous.title)}</strong></a>` : '<span></span>'}${next ? `<a href="${prefix}${postRoute(next)}/"><span>Next Story</span><strong>${esc(next.title)}</strong></a>` : '<span></span>'}</nav><aside class="article-response" aria-label="Respond to this story"><p>Have a thought about this story?</p><a class="button-link article-comment-button" href="${commentUrl}">Send Amy a quick comment</a><small>Your message goes privately to Amy.</small></aside><section class="article-subscribe"><p class="eyebrow">The story is still unfolding</p><h2>Stay connected.</h2><p>Email subscription is coming soon. Until then, explore the complete archive.</p><a class="button-link" href="${prefix}stories/">Explore All Stories</a></section></article>`;
   const socialImage = post.featuredImage
-    ? `https://www.celltoself.com${localMediaUrl(post.featuredImage, '').replace(/\.webp$/i, '.jpg').replace(/^/, '/')}`
+    ? `https://www.celltoself.com${localMediaUrl(post.featuredImage, '').replace(/\.(?:webp|png)$/i, '.jpg').replace(/^/, '/')}`
     : undefined;
   await save(route, layout({ route, title: strip(post.title), description: strip(post.excerpt || post.content).slice(0, 155), active: 'stories', body, socialImage, socialImageAlt: post.featuredImageAlt || strip(post.title) }));
 }
