@@ -107,6 +107,10 @@ document.querySelectorAll('.story-page .article-response .article-comment-button
   updatesButton.textContent = 'Get new blog updates';
   commentButton.after(updatesButton);
 });
+const articleResponseNote = document.querySelector('.story-page .article-response small');
+if (articleResponseNote) articleResponseNote.textContent = 'Comments go privately to Amy. Update signups are never shown publicly.';
+const articleSubscribeCopy = document.querySelector('.story-page .article-subscribe > p:not(.eyebrow)');
+if (articleSubscribeCopy) articleSubscribeCopy.textContent = 'Sign up above for new-blog updates, or explore the complete archive.';
 if (contactForm && formSuccess && contactParams.get('sent') === '1') {
   formSuccess.hidden = false;
   contactForm.hidden = true;
