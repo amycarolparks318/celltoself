@@ -303,6 +303,9 @@ body.coord .card.replied{border-color:var(--accent);box-shadow:0 0 0 1px var(--a
 .guided-primary{font:inherit;font-weight:700;font-size:1.05rem;border:0;border-radius:9px;padding:13px 19px;background:var(--accent);color:var(--accent-ink);cursor:pointer}
 .guided-secondary{font:inherit;font-weight:700;border:1.5px solid var(--line);border-radius:9px;padding:11px 16px;background:var(--surface);color:var(--ink);cursor:pointer}
 .guided-plan{margin:0;font-size:.92rem;color:var(--muted)}
+.guided-bridge{display:grid;gap:10px;margin:0 0 18px;padding:18px;border:1.5px solid var(--accent);border-radius:var(--r);background:linear-gradient(135deg,var(--accent-soft),var(--surface))}
+.guided-bridge h3,.guided-bridge p{margin:0}.guided-bridge p{max-width:68ch;color:var(--muted)}
+.guided-bridge .btnrow{margin-top:2px}
 .qm-head{display:grid;grid-template-columns:1fr auto;gap:8px;align-items:start}
 .qm-head h3{font-size:clamp(1.35rem,4vw,1.8rem)}
 .qm-close{font:inherit;border:0;background:transparent;color:var(--muted);font-size:1.6rem;line-height:1;cursor:pointer;padding:0 4px}
@@ -357,6 +360,7 @@ body.coord .card.replied{border-color:var(--accent);box-shadow:0 0 0 1px var(--a
 .help-box ul{margin:4px 0 0;padding-left:20px}
 .hp-items{border:0;padding:0;margin:0;display:grid;gap:6px}
 .plan{display:grid;gap:14px}
+.plan-tools{display:flex;flex-wrap:wrap;gap:8px;align-items:center;padding:12px 0 2px;border-top:1px solid var(--line)}
 .plan-why textarea{min-height:56px;font-family:var(--f-display);font-size:1.1rem}
 .plan{container-type:inline-size;container-name:plan}
 .board{display:grid;gap:12px;grid-template-columns:1fr;align-items:start}
@@ -432,13 +436,14 @@ body.coord .card.replied{border-color:var(--accent);box-shadow:0 0 0 1px var(--a
 <section id="panel-fit" role="tabpanel" hidden>
   <div class="panel">
     <div class="intro"><h2>Build my reentry plan</h2>
-      <p>Your Sunrise Plan: what to do now, in your first 3 months, your first year and five years from now. Your answers stay on this device unless you send an application.</p></div>
+      <p>Your Sunrise Plan: what to do before release, in your first 72 hours, first month, first year and three to five years from now. Your answers stay on this device unless you send an application.</p></div>
     <div id="fitBox" class="fit-box"></div>
   </div>
 </section>
 
 <!-- FIND -->
 <section id="panel-find" role="tabpanel" hidden>
+  <div class="guided-bridge" data-guided-bridge hidden></div>
   <div class="sec-head">
     <button class="back" type="button" id="backHome">← All sections</button>
     <div class="intro" style="margin:0">
@@ -550,6 +555,7 @@ body.coord .card.replied{border-color:var(--accent);box-shadow:0 0 0 1px var(--a
 <!-- LINES -->
 <section id="panel-lines" role="tabpanel" hidden>
   <div class="panel">
+    <div class="guided-bridge" data-guided-bridge hidden></div>
     <div class="intro">
       <h2>Need help now</h2>
       <p>If you are in danger right now, call 911.</p>
@@ -1496,12 +1502,16 @@ const FIT_QS = [
   {id:'ride', q:'Do you have a ride on release day?', type:'one', opts:[['yes','Yes'],['need','No, I need help'],['unsure','Not sure']], skip: a => a.stage && a.stage !== 'inside'},
   {id:'workrelease', q:'Are you going to work release first?', help:'Work release often needs a box of clothes and basics sent in.', type:'one', opts:[['no','No'],['have','Yes, and someone will help with my box'],['need','Yes, and I need help with my box'],['unsure','Not sure yet']], skip: a => a.stage && a.stage !== 'inside'},
   {id:'support', q:'Who do you have on the outside to support you?', help:'Pick all that apply.', type:'many', opts:[['family','Family'],['friends','Friends'],['partner','A partner'],['church','A church or mentor'],['sponsor','A sponsor or recovery group'],['none','No one right now']]},
+  {id:'children', q:'Are children or family reunification part of your reentry plan?', help:'This helps us add family steps without asking for names or private details.', type:'one', opts:[['none','No'],['with','Children will live with me'],['reunite','I am working toward reunification or visits'],['unsure','I am not sure yet']]},
   {id:'locate', q:'Are you trying to find someone who could support you?', help:'Like a family member or old friend you’ve lost touch with.', type:'one', opts:[['yes','Yes, I need help finding them'],['no','No']]},
   {id:'registry', q:'Will you be required to register as a sexual offender?', help:'This only changes which places we show you. It stays on this device and never appears in your plan.', type:'one', opts:[['no','No'],['yes','Yes'],['skip','I’d rather not say']], skip: a => a.path === 'register'},
   {id:'recovery', q:'Do you want recovery or sober living?', type:'one', opts:[['yes','Yes'],['maybe','Maybe'],['no','No']], skip: a => a.path === 'recovery'},
   {id:'faith', q:'Are faith-based programs OK for you?', help:'Some homes require church, Bible study or prayer.', type:'one', opts:[['yes','Yes'],['no','I’d rather not']]},
   {id:'money', q:'How much money could you have for move-in costs?', type:'one', opts:[['0','None right now'],['300','Under $300'],['800','$300 to $800'],['9999','More than $800']], skip: a => a.path === 'place'},
   {id:'needs', q:'What else do you need help with?', help:'Pick all that apply, or skip.', type:'many', opts:[['jobs','Finding a job'],['legal','Legal help'],['health','Health or mental health'],['food','Food and basics'],['sister','Support from other women'],['support','A reentry case manager'],['transport','Getting around (bus pass, rides)'],['learn','School, GED or computer access']]},
+  {id:'docs', q:'Which important documents do you already have or know you can get?', help:'Pick all you have. Anything missing becomes a step in your plan.', type:'many', opts:[['id','State ID or driver license'],['birth','Birth certificate'],['ss','Social Security card'],['release','Release papers'],['none','None or not sure']]},
+  {id:'meds', q:'Will you need ongoing medication or treatment when you come home?', type:'one', opts:[['no','No'],['rx','Prescription medication'],['mat','Medication-assisted recovery treatment'],['both','Both'],['unsure','I am not sure yet']]},
+  {id:'safe', q:'Do you feel safe where you expect to stay?', help:'If you are unsure, your plan will include making a backup safety plan.', type:'one', opts:[['yes','Yes'],['no','No'],['unsure','I am not sure yet']], skip:a => a.path !== 'place'},
   {id:'basics', q:'Which of these have you done before?', help:'There are no wrong answers. Anything you haven’t done yet becomes a step in your plan, and we can help. Pick all that apply.', type:'many', opts:[['bank','Opened a checking or savings account'],['lease','Rented a place in my name'],['license','Had a driver’s license'],['bills','Paid bills on my own'],['budget','Made a budget'],['credit','Had a credit card or loan'],['taxes','Filed taxes'],['phone','Used a smartphone'],['email','Had an email address'],['online','Filled out an application online'],['none','None of these yet']]},
   {id:'work', q:'What kinds of work have you done before?', help:'Count any job, inside or outside, paid or not. Pick all that apply.', type:'many', opts:[['food','Restaurant or kitchen'],['clean','Cleaning or housekeeping'],['retail','Retail or cashier'],['build','Construction or labor'],['warehouse','Warehouse or factory'],['yard','Landscaping or outdoor work'],['office','Office or front desk'],['care','Caregiving or health care'],['beauty','Hair, nails or beauty'],['drive','Driving or delivery'],['none','No work experience yet']]},
   {id:'training', q:'Do you have a diploma, certificate or training?', help:'Including anything you earned while inside. Pick all that apply.', type:'many', opts:[['ged','GED or high school diploma'],['trade','Trade or vocational certificate'],['college','College classes'],['peer','Peer specialist or recovery training'],['none','None yet']]},
@@ -1682,7 +1692,7 @@ const APPS = [{
 }];
 
 /* ---------- Sunrise Plan (vision board). Never mentions the registry. ---------- */
-const HORIZONS = [['before','Before I go home'],['m3','First 3 months'],['y1','First year'],['y5','In 5 years']];
+const HORIZONS = [['before','Before release'],['h72','First 72 hours'],['d30','First 30 days'],['m3','First 3 months'],['y1','First year'],['y5','3–5 years']];
 const firstLabel = a => a.stage === 'new' ? 'This week' : a.stage === 'home' ? 'Right now' : 'Before I go home';
 const DREAM_STEPS = {
   home:     {y1:'Save toward a deposit for my own place', y5:'Live in my own home'},
@@ -1695,7 +1705,7 @@ const DREAM_STEPS = {
   giveback: {y1:'Share my story or mentor one woman', y5:'Help other women come home'}
 };
 function autoPlan(a, top, res){
-  const P = {before:[], m3:[], y1:[], y5:[]};
+  const P = {before:[], h72:[], d30:[], m3:[], y1:[], y5:[]};
   const reg = a.registry === 'yes';
   if (a.path !== 'place'){
     if (reg || !top.length) P.before.push('Apply to my top housing matches');
@@ -1705,11 +1715,9 @@ function autoPlan(a, top, res){
   const inside = !a.stage || a.stage === 'inside';
   if (inside){
     if (a.supervision !== 'no') P.before.push('Ask my release officer to approve my address');
-    P.before.push('Try to leave with a Florida ID card');
+    P.before.push('Confirm where I will sleep on my first night home');
   } else {
-    if (a.supervision !== 'no') P.before.push('Report to my probation officer and keep my address up to date');
-    P.before.push('Get a Florida ID at a driver license office');
-    P.before.push('Apply for food help and Medicaid through ACCESS Florida');
+    if (a.supervision !== 'no') P.h72.push('Report to my probation officer and keep my address up to date');
   }
   if (a.outfit === 'need' || a.outfit === 'unsure') P.before.push('Get clothes for release day (ask Cell to Sunrise)');
   if (inside){ if (a.ride === 'need' || a.ride === 'unsure') P.before.push('Line up a ride for release day (ask Cell to Sunrise)');
@@ -1717,12 +1725,22 @@ function autoPlan(a, top, res){
   if (a.workrelease === 'need') P.before.push('Get help with my work release box (ask Cell to Sunrise)');
   if (a.workrelease === 'have') P.before.push('Send my work release box list to the person helping me');
   if (a.locate === 'yes') P.before.push('Reconnect with someone who can support me (ask Cell to Sunrise)');
-  if (a.supervision !== 'no') P.m3.push(inside ? 'Report to my probation officer on time' : 'Make every probation check-in on time');
-  if (inside) P.m3.push('Apply for food help and Medicaid through ACCESS Florida');
-  P.m3.push('Replace my birth certificate and Social Security card');
-  if (a.recovery === 'yes' || a.recovery === 'maybe') P.m3.push('Find a meeting and a sponsor');
-  if ((a.support||[]).includes('none') || !(a.support||[]).length) P.m3.push('Find a mentor or a women’s support group');
-  else P.m3.push('Tell my support people my release date and plan');
+  if (a.supervision !== 'no') P.h72.push(inside ? 'Report to my probation officer on time' : 'Confirm my next probation check-in');
+  if (a.path !== 'place') P.h72.push('Check in at my approved housing and learn the rules');
+  if (a.meds && a.meds !== 'no') P.h72.push('Make sure I have my medication and know where the next refill will come from');
+  if (a.safe === 'no' || a.safe === 'unsure') P.h72.push('Make a backup safety plan and identify somewhere safe I can go');
+  if (a.recovery === 'yes' || a.recovery === 'maybe') P.h72.push('Find a recovery meeting for my first three days home');
+  const D = a.docs || [], missing = k => D.includes('none') || !D.includes(k);
+  if (missing('release') && inside) P.before.push('Get a copy of my release papers before I leave');
+  if (missing('id')) (inside ? P.before : P.d30).push('Get a Florida ID at a driver license office');
+  if (missing('birth')) P.d30.push('Order a certified copy of my birth certificate');
+  if (missing('ss')) P.d30.push('Replace my Social Security card');
+  P.d30.push('Apply for food help and Medicaid through ACCESS Florida');
+  if (a.recovery === 'yes' || a.recovery === 'maybe') P.d30.push('Choose a regular meeting and ask someone about sponsorship');
+  if ((a.support||[]).includes('none') || !(a.support||[]).length) P.d30.push('Find a mentor or a women’s support group');
+  else (inside ? P.before : P.h72).push('Tell my support people my plan and how to reach me');
+  if (a.children === 'with') P.d30.push('Confirm child care, school, health care and transportation for my children');
+  if (a.children === 'reunite' || a.children === 'unsure') P.d30.push('Ask about the next safe step for visits or family reunification');
   res.forEach(x => { const ok = x.rows.filter(r => !r.regOnly && r.registry !== 'accepts'); const r0 = (x.k === 'jobs' && ok.find(r => r.tags.includes('Jobs & training'))) || ok[0]; if (!r0) return; if (x.k === 'jobs' && !r0.tags.includes('Jobs & training')){ P.m3.push('Apply at ' + r0.name.split(' — ')[0]); return; } P.m3.push({jobs:'Get job help from ', legal:'Call ', health:'Set up care with ', food:'Get food and basics from ', sister:'Connect with ', support:'Meet with a case manager at ', transport:'Get transportation help from ', learn:'Get set up at '}[x.k] + r0.name.split(' — ')[0]); });
   const work = (a.work||[]).filter(k => k !== 'none'), noWork = !work.length;
   const trained = (a.training||[]).filter(k => k !== 'none');
@@ -1732,10 +1750,10 @@ function autoPlan(a, top, res){
   const B = a.basics || [];
   if (B.length){
     const no = k => !B.includes(k);
-    if (no('phone')) P.before.push('Get a phone and learn the basics (ask about the free Lifeline phone program)');
-    if (no('email')) P.m3.push('Make an email address I can check');
-    if (no('bank')) P.m3.push('Open a checking account (ask about second-chance banking)');
-    if (no('online')) P.m3.push('Practice filling out an online application at the library');
+    if (no('phone')) P.h72.push('Get a phone and learn the basics (ask about the Lifeline phone program)');
+    if (no('email')) P.d30.push('Make an email address I can check');
+    if (no('bank')) P.d30.push('Open a checking account (ask about second-chance banking)');
+    if (no('online')) P.d30.push('Practice filling out an online application at the library');
     if (no('budget') || no('bills')) P.m3.push('Make a simple monthly budget for my bills');
     if (no('lease')) P.y1.push('Learn what’s in a lease before I sign one');
     if (no('credit')) P.y1.push('Check my free credit report and start building credit');
@@ -1749,7 +1767,8 @@ function autoPlan(a, top, res){
   if (!P.y5.length) P.y5.push('Add a dream for five years from now');
   return P;
 }
-const PLAN = store.get('plan', {why:'', done:{}, mine:{before:[],m3:[],y1:[],y5:[]}});
+const PLAN = store.get('plan', {why:'', done:{}, mine:{before:[],h72:[],d30:[],m3:[],y1:[],y5:[]}});
+PLAN.mine = PLAN.mine || {}; HORIZONS.forEach(([h]) => { PLAN.mine[h] = PLAN.mine[h] || []; });
 function planSave(){ store.set('plan', PLAN); }
 const keyOf = t => 'a:' + t.toLowerCase().replace(/\W+/g,'-').slice(0,60);
 
@@ -1768,7 +1787,26 @@ function renderPlan(a, top, res){
     <div class="plan-why"><label for="planWhy" class="stamp">MY WHY: WHO OR WHAT I’M DOING THIS FOR</label>
       <textarea id="planWhy" rows="2" placeholder="My kids. My mom. Me.">${esc(PLAN.why)}</textarea></div>
     <div class="board">${HORIZONS.map(([h,l]) => col([h, h === 'before' ? firstLabel(a) : l])).join('')}</div>
+    <div class="plan-tools"><button class="btn" type="button" id="printPlan">Print or save as PDF</button><button class="btn ghost" type="button" id="downloadPlan">Download my plan</button><button class="btn ghost" type="button" id="copyPlan">Copy my plan</button></div>
     <p class="fit-help">Your plan is saved on this device. Check things off as you go and add your own steps.</p></div>`;
+}
+function planSnapshot(){
+  const a = norm(FIT.a), scored = DATA.map(r => scoreHousing(r,a)).filter(Boolean).sort((x,y)=>y.s-x.s), top = a.path === 'place' ? [] : scored.slice(0,8), res = resourcesFor(a), auto = autoPlan(a,top,res);
+  return {a, rows:HORIZONS.map(([h,label]) => ({h,label:h === 'before' ? firstLabel(a) : label,items:[...auto[h].map(t=>({id:keyOf(t),text:t})),...(PLAN.mine[h]||[])]}))};
+}
+function planText(){
+  const s = planSnapshot(), out = ['MY SUNRISE PLAN', areaLabel(s.a), '', PLAN.why ? 'MY WHY: ' + PLAN.why : '', ''].filter((x,i)=>x || i > 3);
+  s.rows.forEach(r => { out.push(r.label.toUpperCase()); r.items.forEach(i => out.push(`${PLAN.done[i.id] ? '[x]' : '[ ]'} ${i.text}`)); out.push(''); });
+  out.push('Created with Cell to Sunrise · celltoself.com/sunrise'); return out.join('\n');
+}
+function printSunrisePlan(){
+  const s = planSnapshot(), pv = $('#printView'); if (pv.parentNode !== document.body) document.body.appendChild(pv);
+  pv.innerHTML = `<h1>My Sunrise Plan</h1><p>${esc(areaLabel(s.a))}${PLAN.why ? ' · My why: ' + esc(PLAN.why) : ''}</p>` + s.rows.map(r => `<div class="pv"><b>${esc(r.label)}</b>${r.items.map(i => `<div>${PLAN.done[i.id] ? '☑' : '☐'} ${esc(i.text)}</div>`).join('') || '<div>My next step goes here.</div>'}</div>`).join('') + '<p>Created with Cell to Sunrise · celltoself.com/sunrise</p>';
+  document.body.classList.add('printing'); const done=()=>{document.body.classList.remove('printing');window.removeEventListener('afterprint',done)}; window.addEventListener('afterprint',done);
+  try{window.print()}catch(e){done();toast('Printing isn’t available here. Download your plan instead.')} setTimeout(done,60000);
+}
+function downloadSunrisePlan(){
+  const u=URL.createObjectURL(new Blob([planText()],{type:'text/plain;charset=utf-8'})), a=document.createElement('a'); a.href=u; a.download='my-sunrise-plan.txt'; document.body.appendChild(a); a.click(); a.remove(); setTimeout(()=>URL.revokeObjectURL(u),1000);
 }
 document.addEventListener('change', e => {
   const c = e.target.closest('[data-plan-done]'); if (!c) return;
@@ -1819,6 +1857,8 @@ function renderFitResults(){
     ${FIT.view === 'plan' ? renderPlan(a, top, res) : matches}`;
   $('#fitRedo').addEventListener('click', () => { FIT.step = 0; renderFitQ(); });
   document.querySelectorAll('[data-fitview]').forEach(b => b.addEventListener('click', () => { FIT.view = b.dataset.fitview; renderFitResults(); }));
+  const pp=$('#printPlan'), dp=$('#downloadPlan'), cp=$('#copyPlan');
+  if(pp) pp.addEventListener('click',printSunrisePlan); if(dp) dp.addEventListener('click',downloadSunrisePlan); if(cp) cp.addEventListener('click',()=>copyText(planText(),'Your plan'));
 }
 
 /* help requests to Cell to Sunrise */
@@ -1934,11 +1974,11 @@ function renderPlanStart(){
   const begun = Object.keys(FIT.a).length > 0;
   $('#fitBox').innerHTML = `<div class="plan-start">
     <h3 class="fit-q" style="margin:0">Your vision board, step by step</h3>
-    <p class="fit-help">Answer about 19 short questions (around 5 minutes). We’ll turn your answers into a plan you can check off:</p>
-    <ul><li><b>${'Before I go home'} / this week:</b> the first things to do</li><li><b>First 3 months:</b> ID, benefits, work, a phone, a bank account</li><li><b>First year and 5 years:</b> your goals, broken into steps</li><li>Housing and help that fit you, plus help Cell to Sunrise can give</li></ul>
+    <p class="fit-help">Answer a few short questions (about 5 minutes). We’ll turn your answers into a plan you can check off:</p>
+    <ul><li><b>Before release and the first 72 hours:</b> the things that cannot wait</li><li><b>First 30 days and 3 months:</b> documents, benefits, health, work and support</li><li><b>First year and 3–5 years:</b> your bigger goals, broken into steps</li><li>Housing and help that fit you, plus help Cell to Sunrise can give</li></ul>
     <div class="btnrow"><button class="btn" type="button" id="planGo">${begun ? 'Continue my plan' : 'Start my plan'}</button>${begun ? '<button class="btn ghost" type="button" id="planRestart">Start over</button>' : ''}</div>
     <p class="fit-help">Just need places to call? <button type="button" class="linkbtn" id="planToFind">Find housing and help</button></p></div>`;
-  $('#planGo').addEventListener('click', () => { const qs = visibleQs(); FIT.step = Math.max(0, qs.findIndex(q => FIT.a[q.id] === undefined)); if (FIT.step < 0) FIT.step = 0; renderFitQ(); });
+  $('#planGo').addEventListener('click', () => { const qs = visibleQs(), i = qs.findIndex(q => FIT.a[q.id] === undefined); if(i < 0){FIT.step=qs.length;renderFitResults()}else{FIT.step=i;renderFitQ()} });
   const rs = $('#planRestart'); if (rs) rs.addEventListener('click', () => { FIT.a = {}; fitSave(); FIT.step = 0; renderFitQ(); });
   $('#planToFind').addEventListener('click', () => openSection('housing'));
 }
@@ -1947,6 +1987,20 @@ $('#findCta').addEventListener('click', () => openSection('housing'));
 function updateFindCta(){ $('#findCtaSub').textContent = state.county && state.county !== 'Statewide' ? `Browse ${state.county} County resources` : 'Browse all resources'; }
 /* Guided start: four calm steps, then straight to matched resources. */
 const QM_NEED = [['housing','A safe place to live'],['tonight','Somewhere to stay tonight'],['recovery','Recovery or sober housing'],['food','Food and basic necessities'],['jobs','Employment or training'],['health','Health or treatment'],['transport','Transportation'],['support','Reentry support'],['reg','Registry-compatible resources']];
+const QM_TO_NEED = {food:'food',jobs:'jobs',health:'health',transport:'transport',support:'support'};
+function seedPlanFromQuick(q){
+  if(q.stage && q.stage !== 'helping') FIT.a.stage=q.stage;
+  if(q.county && q.county !== 'Statewide') FIT.a.counties=[q.county]; else if(!FIT.a.counties) FIT.a.counties='any';
+  FIT.a.path = q.need === 'recovery' ? 'recovery' : q.need === 'reg' ? 'register' : 'open';
+  if(QM_TO_NEED[q.need]) FIT.a.needs=[...new Set([...(FIT.a.needs||[]),QM_TO_NEED[q.need]])];
+  fitSave();
+}
+function renderGuidedBridge(){
+  const g=store.get('guidedBridge',null), hidden=!g || g.dismissed;
+  document.querySelectorAll('[data-guided-bridge]').forEach(el=>{ el.hidden=hidden; if(hidden)return; el.innerHTML=`<span class="stamp">YOUR FIRST NEED</span><h3>You found a place to begin.</h3><p>You do not have to figure everything out today. When you are ready, we can help you map housing, documents, transportation, health, work, family, finances and long-term goals.</p><div class="btnrow"><button class="btn" type="button" data-bridge-plan>Build my complete reentry plan</button><button class="btn ghost" type="button" data-bridge-later>I’ll finish later</button></div>`; });
+  document.querySelectorAll('[data-bridge-plan]').forEach(b=>b.addEventListener('click',()=>{seedPlanFromQuick(g);FIT.view='plan';const qs=visibleQs(),i=qs.findIndex(q=>FIT.a[q.id]===undefined);FIT.step=i<0?qs.length:i;showTab('fit');i<0?renderFitResults():renderFitQ()}));
+  document.querySelectorAll('[data-bridge-later]').forEach(b=>b.addEventListener('click',()=>{g.dismissed=true;store.set('guidedBridge',g);renderGuidedBridge();toast('Your starting answers are saved on this device.')}));
+}
 function openQuickMatch(){
   const old = store.get('quick', {});
   const q = {county: state.county || old.county || '', need: old.need || '', stage: old.stage || '', women: old.women ?? true, inside: old.inside || false, cost: old.cost || false, solid: old.solid || false};
@@ -1960,12 +2014,12 @@ function openQuickMatch(){
     const solid = $('#qmSolid'); if (solid) q.solid = solid.checked;
   }
   function finish(){
-    saveVisible(); state.county = q.county; store.set('quick', q); closeSheet();
-    if (q.need === 'tonight'){ $('#tonightCounty').value = FL_COUNTIES.has(state.county) ? state.county : ''; store.set('filters2', state); renderTonight(); showTab('lines'); return; }
+    saveVisible(); state.county = q.county; store.set('quick', q); store.set('guidedBridge',{...q,dismissed:false}); seedPlanFromQuick(q); closeSheet();
+    if (q.need === 'tonight'){ $('#tonightCounty').value = FL_COUNTIES.has(state.county) ? state.county : ''; store.set('filters2', state); renderTonight(); showTab('lines'); renderGuidedBridge(); return; }
     Object.assign(state, {women:q.women, inside:q.inside, cost:q.cost, solid:q.solid, q:''});
     const sec = q.need === 'recovery' ? 'housing' : q.need;
     state.section = sec; state.types = q.need === 'recovery' ? ['Recovery housing'] : []; state.rtypes = [];
-    syncControls(); changed(); showTab('find');
+    syncControls(); changed(); showTab('find'); renderGuidedBridge();
   }
   function render(){
     const pages = [
@@ -1993,6 +2047,7 @@ $('#quickMatch').addEventListener('click', openQuickMatch);
 
 /* ---------- boot ---------- */
 syncControls(); setSavedCount(); renderSteps(); renderList();
+renderGuidedBridge();
 const startTab = (location.hash || '').slice(1);
 showTab(['home','fit','find','steps','call','saved','lines','about'].includes(startTab) ? startTab : (store.get('tab2','home') === 'work' ? 'home' : store.get('tab2','home')));
 startWork();
