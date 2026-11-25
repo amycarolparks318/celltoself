@@ -294,6 +294,30 @@ body.coord .card.replied{border-color:var(--accent);box-shadow:0 0 0 1px var(--a
 .qm .chips{display:flex;flex-wrap:wrap;gap:8px}
 .qm fieldset{border:0;padding:0;margin:0;display:grid;gap:8px}
 .qm legend{font-weight:700;margin-bottom:6px}
+.guided-start{position:relative;overflow:hidden;background:linear-gradient(135deg,var(--surface),var(--accent-soft));border:1px solid var(--line);border-radius:16px;padding:clamp(20px,4vw,38px);margin-bottom:24px;display:grid;gap:18px}
+.guided-start::after{content:"";position:absolute;width:190px;aspect-ratio:1;border-radius:50%;right:-72px;bottom:-104px;background:var(--gold);opacity:.23;pointer-events:none}
+.guided-start>*{position:relative;z-index:1}
+.guided-start h2{font-size:clamp(1.8rem,5vw,3rem);max-width:18ch}
+.guided-start>p{max-width:58ch;margin:0;color:var(--muted);font-size:1.05rem}
+.guided-actions{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+.guided-primary{font:inherit;font-weight:700;font-size:1.05rem;border:0;border-radius:9px;padding:13px 19px;background:var(--accent);color:var(--accent-ink);cursor:pointer}
+.guided-secondary{font:inherit;font-weight:700;border:1.5px solid var(--line);border-radius:9px;padding:11px 16px;background:var(--surface);color:var(--ink);cursor:pointer}
+.guided-plan{margin:0;font-size:.92rem;color:var(--muted)}
+.qm-head{display:grid;grid-template-columns:1fr auto;gap:8px;align-items:start}
+.qm-head h3{font-size:clamp(1.35rem,4vw,1.8rem)}
+.qm-close{font:inherit;border:0;background:transparent;color:var(--muted);font-size:1.6rem;line-height:1;cursor:pointer;padding:0 4px}
+.qm-progress{display:grid;gap:7px}
+.qm-progress-line{height:7px;border-radius:999px;background:var(--sunk);overflow:hidden}
+.qm-progress-line span{display:block;height:100%;background:var(--accent);border-radius:inherit;transition:width .2s ease}
+.qm-step{display:grid;gap:14px;min-height:245px;align-content:start}
+.qm-step h4{font-family:var(--f-display);font-size:1.35rem;margin:4px 0 0}
+.qm-step>p{margin:0;color:var(--muted)}
+.qm-choice-grid{display:grid;grid-template-columns:1fr 1fr;gap:9px}
+.qm-choice{font:inherit;font-weight:700;text-align:left;border:1.5px solid var(--line);background:var(--bg);color:var(--ink);border-radius:9px;padding:12px;cursor:pointer}
+.qm-choice[aria-pressed="true"]{border-color:var(--accent);background:var(--accent-soft);box-shadow:0 0 0 1px var(--accent) inset}
+.qm-nav{display:flex;justify-content:space-between;gap:10px;align-items:center;border-top:1px solid var(--line);padding-top:12px}
+.qm-error{min-height:1.2em;margin:0;color:var(--bad);font-weight:700;font-size:.88rem}
+@media(max-width:520px){.qm-choice-grid{grid-template-columns:1fr}.qm-step{min-height:300px}.guided-actions{display:grid}.guided-actions>*{width:100%}}
 .tonight{background:var(--surface);border:2px solid var(--accent);border-radius:var(--r);padding:16px;display:grid;gap:10px;margin-bottom:18px}
 .tonight h3{margin:0}
 .trow{display:flex;justify-content:space-between;gap:10px;align-items:center;border-top:1px solid var(--line);padding-top:10px;flex-wrap:wrap}
@@ -383,22 +407,18 @@ body.coord .card.replied{border-color:var(--accent);box-shadow:0 0 0 1px var(--a
 <!-- HOME -->
 <section id="panel-home" role="tabpanel">
   <div class="work-strip" id="workStrip" hidden><b></b><button class="btn" type="button" id="stripGo">Open coordinator workspace</button></div>
-  <div class="home-top">
-    <div class="intro" style="margin:0">
-      <h2>Housing and help after prison, county by county</h2>
-      <p>Pick your county, then choose what you need. Listings change often, so each one tells you how sure we are.</p>
-      <div class="stamp" id="stamp"></div>
+  <section class="guided-start" aria-labelledby="guidedTitle">
+    <span class="stamp">ONE STEP AT A TIME</span>
+    <h2 id="guidedTitle">Let’s figure out your next step.</h2>
+    <p>Tell us where you’re returning and what you need most today. We’ll help you find a manageable place to begin.</p>
+    <div class="guided-actions">
+      <button type="button" class="guided-primary" id="quickMatch">Help me get started</button>
+      <button type="button" class="guided-secondary" id="findCta"><span id="findCtaSub">Browse all resources</span></button>
     </div>
-    <div class="county-pick">
-      <label for="homeCounty" class="stamp">YOUR COUNTY</label>
-      <select id="homeCounty"><option value="">All counties</option></select>
-    </div>
-  </div>
-  <div class="fit-ctas">
-    <button type="button" class="fit-cta big" id="findCta"><b>Find housing and help</b><span id="findCtaSub">Places to call in your county, with what to ask first →</span></button>
-    <button type="button" class="fit-cta alt" id="planCta"><b>Build my reentry plan</b><span>Your vision board: this week, 3 months, 1 year, 5 years →</span></button>
-  </div>
-  <p class="match-link"><button type="button" class="linkbtn" id="quickMatch">Not sure where to start? Answer 4 quick questions</button></p>
+    <p class="guided-plan">Looking beyond today? <button type="button" class="linkbtn" id="planCta">Build my complete reentry plan</button></p>
+    <select id="homeCounty" aria-label="Saved home county" hidden><option value="">All counties</option></select>
+    <div class="stamp" id="stamp"></div>
+  </section>
   <div id="programs"></div>
   <div class="section-label">Getting ready</div>
   <div class="quick">
@@ -1924,38 +1944,50 @@ function renderPlanStart(){
 }
 $('#planCta').addEventListener('click', () => { FIT.view = 'plan'; $('#fitBox').innerHTML = ''; showTab('fit'); });
 $('#findCta').addEventListener('click', () => openSection('housing'));
-function updateFindCta(){ $('#findCtaSub').textContent = state.county && state.county !== 'Statewide' ? `Places to call in ${state.county} County, with what to ask first →` : 'Places to call in your county, with what to ask first →'; }
-/* quick match: 4 questions on one screen, then straight to the directory */
-const QM_NEED = [['housing','A place to live'],['recovery','Recovery or sober living'],['reg','Housing that works with the registry'],['tonight','A place to stay tonight'],['jobs','A job'],['food','Food and basics'],['health','Health or treatment']];
+function updateFindCta(){ $('#findCtaSub').textContent = state.county && state.county !== 'Statewide' ? `Browse ${state.county} County resources` : 'Browse all resources'; }
+/* Guided start: four calm steps, then straight to matched resources. */
+const QM_NEED = [['housing','A safe place to live'],['tonight','Somewhere to stay tonight'],['recovery','Recovery or sober housing'],['food','Food and basic necessities'],['jobs','Employment or training'],['health','Health or treatment'],['transport','Transportation'],['support','Reentry support'],['reg','Registry-compatible resources']];
 function openQuickMatch(){
-  const q = store.get('quick', {stage:'', need:'housing', women:true, inside:false, cost:false, solid:false});
-  const chips = (name, opts, val) => `<div class="chips">${opts.map(([v,l]) => `<button type="button" class="chip" data-qm="${name}" data-v="${v}" aria-pressed="${v === val}">${esc(l)}</button>`).join('')}</div>`;
-  openSheet(`<h3>Find places to call</h3><form class="qm" id="qmFrm">
-    <fieldset><legend>1. Where are you now?</legend>${chips('stage', [['inside','Still inside'],['new','Just released'],['home','Home a while']], q.stage)}</fieldset>
-    <fieldset><legend>2. Which county?</legend><select id="qmCounty"><option value="">All of Florida</option>${countyOpts}</select></fieldset>
-    <fieldset><legend>3. What do you need most right now?</legend>${chips('need', QM_NEED, q.need)}</fieldset>
-    <fieldset><legend>4. Only show places that… <span class="stamp">(optional)</span></legend>
-      <label class="toggle"><input type="checkbox" id="qmWomen" ${q.women?'checked':''}> Take women</label>
-      <label class="toggle"><input type="checkbox" id="qmInside" ${q.inside?'checked':''}> <span>Say online that you can apply from inside<br><span class="stamp">Few do. Most you have to call and ask.</span></span></label>
-      <label class="toggle"><input type="checkbox" id="qmCost" ${q.cost?'checked':''}> Have a listed price</label>
-      <label class="toggle"><input type="checkbox" id="qmSolid" ${q.solid?'checked':''}> Have been checked (hide unverified leads)</label></fieldset>
-    <div class="btnrow"><button class="btn" type="submit">Show places</button><button class="btn ghost" type="button" data-close>Cancel</button></div></form>`);
-  $('#qmCounty').value = state.county || '';
-  const sel = {stage: q.stage, need: q.need};
-  $('#qmFrm').addEventListener('click', e => { const b = e.target.closest('[data-qm]'); if (!b) return; sel[b.dataset.qm] = b.dataset.v;
-    $('#qmFrm').querySelectorAll(`[data-qm="${b.dataset.qm}"]`).forEach(x => x.setAttribute('aria-pressed', x === b));
-    });
-  $('#qmFrm').addEventListener('submit', e => {
-    e.preventDefault();
-    const nq = {stage: sel.stage, need: sel.need, women: $('#qmWomen').checked, inside: $('#qmInside').checked, cost: $('#qmCost').checked, solid: $('#qmSolid').checked};
-    state.county = $('#qmCounty').value;
-    store.set('quick', nq); closeSheet();
-    if (nq.need === 'tonight'){ $('#tonightCounty').value = FL_COUNTIES.has(state.county) ? state.county : ''; store.set('filters2', state); renderTonight(); showTab('lines'); return; }
-    Object.assign(state, {women: nq.women, inside: nq.inside, cost: nq.cost, solid: nq.solid, q: ''});
-    const sec = nq.need === 'recovery' ? 'housing' : nq.need;
-    state.section = sec; state.types = nq.need === 'recovery' ? ['Recovery housing'] : []; state.rtypes = [];
+  const old = store.get('quick', {});
+  const q = {county: state.county || old.county || '', need: old.need || '', stage: old.stage || '', women: old.women ?? true, inside: old.inside || false, cost: old.cost || false, solid: old.solid || false};
+  let step = 0;
+  const choice = (name, opts, val) => `<div class="qm-choice-grid">${opts.map(([v,l]) => `<button type="button" class="qm-choice" data-qm="${name}" data-v="${v}" aria-pressed="${v === val}">${esc(l)}</button>`).join('')}</div>`;
+  function saveVisible(){
+    const county = $('#qmCounty'); if (county) q.county = county.value;
+    const women = $('#qmWomen'); if (women) q.women = women.checked;
+    const inside = $('#qmInside'); if (inside) q.inside = inside.checked;
+    const cost = $('#qmCost'); if (cost) q.cost = cost.checked;
+    const solid = $('#qmSolid'); if (solid) q.solid = solid.checked;
+  }
+  function finish(){
+    saveVisible(); state.county = q.county; store.set('quick', q); closeSheet();
+    if (q.need === 'tonight'){ $('#tonightCounty').value = FL_COUNTIES.has(state.county) ? state.county : ''; store.set('filters2', state); renderTonight(); showTab('lines'); return; }
+    Object.assign(state, {women:q.women, inside:q.inside, cost:q.cost, solid:q.solid, q:''});
+    const sec = q.need === 'recovery' ? 'housing' : q.need;
+    state.section = sec; state.types = q.need === 'recovery' ? ['Recovery housing'] : []; state.rtypes = [];
     syncControls(); changed(); showTab('find');
-  });
+  }
+  function render(){
+    const pages = [
+      `<div class="qm-step"><h4>Where are you returning?</h4><p>Choose a Florida county. If you are not sure yet, we can still show statewide options.</p><label class="field"><span class="lbl">County</span><select id="qmCounty"><option value="">I’m not sure yet — show all Florida</option><option value="Statewide">Statewide programs only</option>${countyOpts}</select></label></div>`,
+      `<div class="qm-step"><h4>What do you need most today?</h4><p>Choose one place to begin. You can come back for everything else.</p>${choice('need',QM_NEED,q.need)}</div>`,
+      `<div class="qm-step"><h4>Where are you in the process?</h4><p>This helps us show resources that make sense for right now.</p>${choice('stage',[['inside','Still inside'],['new','Just released'],['home','Home for a while'],['helping','Helping someone else']],q.stage)}</div>`,
+      `<div class="qm-step"><h4>What should we keep in mind?</h4><p>These are optional. Select only what would make the results more useful.</p><fieldset>
+        <label class="toggle"><input type="checkbox" id="qmWomen" ${q.women?'checked':''}> Only show places that take women</label>
+        <label class="toggle"><input type="checkbox" id="qmInside" ${q.inside?'checked':''}> <span>Can apply from inside<br><span class="stamp">Few programs publish this. You may still need to call.</span></span></label>
+        <label class="toggle"><input type="checkbox" id="qmCost" ${q.cost?'checked':''}> Have a listed price</label>
+        <label class="toggle"><input type="checkbox" id="qmSolid" ${q.solid?'checked':''}> Hide unverified leads</label>
+      </fieldset></div>`
+    ];
+    openSheet(`<div class="qm-head"><div><span class="stamp">LET’S FIND A PLACE TO BEGIN</span><h3>One step at a time</h3></div><button type="button" class="qm-close" data-close aria-label="Close">×</button></div>
+      <div class="qm-progress"><span class="stamp">STEP ${step+1} OF 4</span><div class="qm-progress-line"><span style="width:${(step+1)*25}%"></span></div></div>
+      <form class="qm" id="qmFrm">${pages[step]}<p class="qm-error" id="qmError" role="alert"></p><div class="qm-nav"><button class="btn ghost" type="button" id="qmBack" ${step===0?'hidden':''}>Back</button><button class="btn" type="submit">${step===3?'Show my starting points':'Continue'}</button></div></form>`);
+    if (step === 0) $('#qmCounty').value = q.county;
+    $('#qmFrm').addEventListener('click', e => { const b=e.target.closest('[data-qm]'); if(!b)return; q[b.dataset.qm]=b.dataset.v; $('#qmFrm').querySelectorAll(`[data-qm="${b.dataset.qm}"]`).forEach(x=>x.setAttribute('aria-pressed',x===b)); });
+    const back=$('#qmBack'); if(back) back.addEventListener('click',()=>{ saveVisible(); step--; render(); });
+    $('#qmFrm').addEventListener('submit',e=>{ e.preventDefault(); saveVisible(); if(step===1&&!q.need){ $('#qmError').textContent='Choose the one thing you need most today.'; return; } if(step===2&&!q.stage){ $('#qmError').textContent='Choose the answer that best describes where you are now.'; return; } if(step<3){ step++; render(); } else finish(); });
+  }
+  render();
 }
 $('#quickMatch').addEventListener('click', openQuickMatch);
 
