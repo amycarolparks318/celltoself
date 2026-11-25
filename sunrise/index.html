@@ -2019,7 +2019,7 @@ function openQuickMatch(){
     Object.assign(state, {women:q.women, inside:q.inside, cost:q.cost, solid:q.solid, q:''});
     const sec = q.need === 'recovery' ? 'housing' : q.need;
     state.section = sec; state.types = q.need === 'recovery' ? ['Recovery housing'] : []; state.rtypes = [];
-    syncControls(); changed(); showTab('find'); renderGuidedBridge();
+    syncControls(); $('#county').value=q.county; $('#homeCounty').value=q.county; store.set('filters2',state); shown=PAGE; renderList(); railLabel(); showTab('find'); renderGuidedBridge();
   }
   function render(){
     const pages = [
