@@ -5,6 +5,9 @@ import path from 'node:path';
 const importedData = JSON.parse(await readFile('content/wordpress.json', 'utf8'));
 const localPosts = JSON.parse(await readFile('content/local-posts.json', 'utf8'));
 const data = { ...importedData, posts: [...localPosts, ...importedData.posts] };
+const siteOrigin = 'https://www.celltoself.com';
+const canonicalUrlFor = (route) => `${siteOrigin}/${route ? `${route}/` : ''}`;
+const sitemapRoutes = new Set(['', 'sunrise']);
 const categoryOrder = ['dear-prison-pals', 'after-the-headline', 'healing-in-real-time', 'ink-on-the-inside'];
 
 const decode = (value = '') => value
@@ -148,9 +151,9 @@ function footer(prefix) {
 function layout({ route = '', title, description, active, body, socialImage, socialImageAlt }) {
   const prefix = prefixFor(route);
   const pageTitle = `${title} — Cell to Self`;
-  const canonicalUrl = `https://www.celltoself.com/${route ? `${route}/` : ''}`;
-  const socialTags = socialImage ? `<link rel="canonical" href="${esc(canonicalUrl)}"><meta property="og:title" content="${esc(pageTitle)}"><meta property="og:description" content="${esc(description)}"><meta property="og:type" content="article"><meta property="og:url" content="${esc(canonicalUrl)}"><meta property="og:site_name" content="Cell to Self"><meta property="og:image" content="${esc(socialImage)}"><meta property="og:image:alt" content="${esc(socialImageAlt)}"><meta property="og:image:type" content="image/jpeg"><meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="${esc(pageTitle)}"><meta name="twitter:description" content="${esc(description)}"><meta name="twitter:image" content="${esc(socialImage)}"><meta name="twitter:image:alt" content="${esc(socialImageAlt)}">` : '';
-  return `<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="${esc(description)}"><meta name="theme-color" content="#11100e">${socialTags}<link rel="icon" type="image/png" href="${prefix}assets/images/amy-favicon.png"><title>${esc(pageTitle)}</title><link rel="stylesheet" href="${prefix}styles.css?v=20261123-1"></head><body id="top">${header(prefix, active)}<main id="main-content">${body}</main>${footer(prefix)}<script src="${prefix}main.js?v=20261123-1"></script></body></html>`;
+  const canonicalUrl = canonicalUrlFor(route);
+  const socialTags = socialImage ? `<meta property="og:title" content="${esc(pageTitle)}"><meta property="og:description" content="${esc(description)}"><meta property="og:type" content="article"><meta property="og:url" content="${esc(canonicalUrl)}"><meta property="og:site_name" content="Cell to Self"><meta property="og:image" content="${esc(socialImage)}"><meta property="og:image:alt" content="${esc(socialImageAlt)}"><meta property="og:image:type" content="image/jpeg"><meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="${esc(pageTitle)}"><meta name="twitter:description" content="${esc(description)}"><meta name="twitter:image" content="${esc(socialImage)}"><meta name="twitter:image:alt" content="${esc(socialImageAlt)}">` : '';
+  return `<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="${esc(description)}"><meta name="theme-color" content="#11100e"><link rel="canonical" href="${esc(canonicalUrl)}">${socialTags}<link rel="icon" type="image/png" href="${prefix}assets/images/amy-favicon.png"><title>${esc(pageTitle)}</title><link rel="stylesheet" href="${prefix}styles.css?v=20261123-1"></head><body id="top">${header(prefix, active)}<main id="main-content">${body}</main>${footer(prefix)}<script src="${prefix}main.js?v=20261123-1"></script></body></html>`;
 }
 
 function storyCard(post, prefix, index = 0, hidden = false) {
@@ -164,6 +167,7 @@ function storyCard(post, prefix, index = 0, hidden = false) {
 }
 
 async function save(route, html) {
+  sitemapRoutes.add(route);
   const directory = route ? path.join(route) : '.';
   await mkdir(directory, { recursive: true });
   await writeFile(path.join(directory, 'index.html'), html, 'utf8');
@@ -171,7 +175,7 @@ async function save(route, html) {
 
 const storiesBody = `<section class="page-hero page-hero--stories"><p class="eyebrow">The complete archive</p><h1>Stories,<br><em>still unfolding.</em></h1><p>Browse real life after prison as it happens—messy, funny, painful, hopeful, and free.</p></section>
 <section class="archive-section" aria-labelledby="all-stories"><div class="archive-toolbar"><div><h2 id="all-stories">All Stories</h2><p class="archive-mode-note" data-archive-note>Newest stories first.</p></div><div class="filters" role="group" aria-label="Filter and order stories"><button class="is-active" data-filter="all" aria-pressed="true">All</button>${data.categories.map((cat) => `<button data-filter="${cat.slug}" aria-pressed="false">${esc(cat.name)}</button>`).join('')}<button class="reading-order-button" data-filter="reading-order" aria-pressed="false">Read in Order</button></div></div><div class="archive-grid">${data.posts.map((post, index) => storyCard(post, '../', index)).join('')}</div><p class="no-results" hidden>No stories are in this category yet.</p></section>`;
-await save('stories', layout({ route: 'stories', title: 'Stories', description: 'Browse every Cell to Self story by category.', active: 'stories', body: storiesBody }));
+await save('stories', layout({ route: 'stories', title: 'Stories About Life After Prison', description: 'Read Amy Parks’s stories about life after prison, including reentry, work, identity, healing, letters to friends still inside, and poems written in prison.', active: 'stories', body: storiesBody }));
 
 const pals = data.posts.filter((post) => category(post).slug === 'dear-prison-pals');
 const palsBody = `<section class="page-hero page-hero--pals"><p class="eyebrow">Letters to the women still inside</p><h1>Dear Prison<br><em>Pals,</em></h1><p>Actual letters about debit cards, probation, men, meetings, peanut butter Snickers, work, God, and everything freedom forgot to explain.</p></section><section class="archive-section"><div class="archive-toolbar"><div><p class="eyebrow">Every installment</p><h2>The letter archive</h2></div><p>${pals.length} letters and counting.</p></div><div class="archive-grid">${pals.map((post, index) => storyCard(post, '../', index, index >= 8)).join('')}</div>${pals.length > 8 ? '<button class="button-link load-more" type="button" data-load-more>Load Older Letters</button>' : ''}</section>`;
@@ -187,7 +191,7 @@ const startBody = `<section class="start-here-hero"><div class="start-here-intro
 await save('start-here', layout({ route: 'start-here', title: 'Start Here', description: 'Meet Amy and learn how to begin reading Cell to Self.', active: 'start', body: startBody }));
 
 const aboutBody = await readFile('content/about.html', 'utf8');
-await save('about', layout({ route: 'about', title: 'About Amy', description: 'Meet Amy Parks, the writer behind Cell to Self.', active: 'about', body: aboutBody }));
+await save('about', layout({ route: 'about', title: 'About Amy', description: 'Meet Amy Parks, the writer behind Cell to Self, a first-person account of coming home from prison and rebuilding a life in real time.', active: 'about', body: aboutBody }));
 
 const connectBody = `<section class="page-hero"><p class="eyebrow">Keep reading</p><h1>Stay<br><em>connected.</em></h1><p>Send a note, follow along, or ask to hear when something new is published.</p></section><section class="connection-page contact-layout"><div><p class="eyebrow">Contact Amy</p><h2>Say hello.</h2><p>Questions, stories, speaking inquiries, support, or just a note from one human figuring it out to another.</p><p class="form-success" data-form-success hidden role="status">Thanks for reaching out. Your message has been sent to Amy.</p><form id="contact-form" class="contact-form" data-contact-form action="https://formsubmit.co/amycarolparks318@gmail.com" method="post"><input type="hidden" name="_subject" value="New Cell to Self website message"><input type="hidden" name="_template" value="table"><input type="hidden" name="_next" value="https://www.celltoself.com/stay-connected/?sent=1"><input class="form-honeypot" type="text" name="_honey" tabindex="-1" autocomplete="off" aria-hidden="true"><label for="contact-name">Name</label><input id="contact-name" name="name" type="text" autocomplete="name"><label for="contact-phone">Phone number <span>(optional)</span></label><input id="contact-phone" name="phone" type="tel" autocomplete="tel"><label for="contact-email">Email <span>(required)</span></label><input id="contact-email" name="email" type="email" autocomplete="email" required><label for="contact-message">Message</label><textarea id="contact-message" name="message" rows="7" required></textarea><label class="checkbox-label" for="contact-subscribe"><input id="contact-subscribe" name="subscribe" type="checkbox" value="Yes"><span>Yes, tell Amy I’d like to subscribe when email updates become available.</span></label><button class="button-link" type="submit">Send Message</button></form></div><aside class="connection-options"><h2>Find Cell to Self</h2><a class="social-link" href="https://www.facebook.com/cell2self"><svg class="facebook-icon" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M24 12.07C24 5.4 18.63 0 12 0S0 5.4 0 12.07C0 18.1 4.39 23.1 10.13 24v-8.44H7.08v-3.49h3.05V9.41c0-3.03 1.79-4.7 4.53-4.7 1.31 0 2.68.24 2.68.24v2.97h-1.51c-1.49 0-1.96.93-1.96 1.89v2.26h3.33l-.53 3.49h-2.8V24C19.61 23.1 24 18.1 24 12.07Z"/></svg><span>Cell to Self on Facebook</span></a><a class="social-link" href="https://www.facebook.com/amycarolparks/"><svg class="facebook-icon" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M24 12.07C24 5.4 18.63 0 12 0S0 5.4 0 12.07C0 18.1 4.39 23.1 10.13 24v-8.44H7.08v-3.49h3.05V9.41c0-3.03 1.79-4.7 4.53-4.7 1.31 0 2.68.24 2.68.24v2.97h-1.51c-1.49 0-1.96.93-1.96 1.89v2.26h3.33l-.53 3.49h-2.8V24C19.61 23.1 24 18.1 24 12.07Z"/></svg><span>Amy on Facebook</span></a><a class="text-link" href="../stories/">Explore All Stories</a></aside></section>`;
 const finishedConnectBody = connectBody.replace('<h2>Find Cell to Self</h2>', '');
@@ -214,5 +218,16 @@ for (let index = 0; index < data.posts.length; index += 1) {
     : undefined;
   await save(route, layout({ route, title: strip(post.title), description: strip(post.excerpt || post.content).slice(0, 155), active: 'stories', body, socialImage, socialImageAlt: post.featuredImageAlt || strip(post.title) }));
 }
+
+const sitemapEntries = [...sitemapRoutes].sort()
+  .map((route) => `  <url><loc>${esc(canonicalUrlFor(route))}</loc></url>`);
+await writeFile('sitemap.xml', [
+  '<?xml version="1.0" encoding="UTF-8"?>',
+  '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">',
+  ...sitemapEntries,
+  '</urlset>',
+  '',
+].join('\n'));
+await writeFile('robots.txt', `User-agent: *\nAllow: /\nSitemap: ${siteOrigin}/sitemap.xml\n`);
 
 console.log(`Built ${data.posts.length} story pages, ${data.categories.length} category pages, and 6 core pages.`);
