@@ -1518,6 +1518,9 @@ const FIT_QS = [
   {id:'dreams', q:'Picture your life five years from now. What do you see?', help:'Pick all that speak to you. These become your vision board.', type:'many', opts:[['home','My own home'],['family','My family together'],['career','A steady job or career'],['school','Finishing school or training'],['sober','Healthy and in recovery'],['car','My license and a car'],['business','My own business'],['giveback','Helping other women come home']]}
 ];
 const FIT = { step: 0, a: store.get('fit2', {}), view: 'plan' };
+function purgeSkippedAnswers(){
+  let dirty=false; FIT_QS.forEach(q=>{if(q.skip&&q.skip(FIT.a)&&Object.prototype.hasOwnProperty.call(FIT.a,q.id)){delete FIT.a[q.id];dirty=true;}}); if(dirty) fitSave();
+}
 /* derived answers from the first question */
 function norm(a){
   const x = {...a};
@@ -1565,7 +1568,7 @@ function answered(Q){
 }
 
 function renderFitQ(){
-  const box = $('#fitBox'), qs = visibleQs(), n = qs.length;
+  purgeSkippedAnswers(); const box = $('#fitBox'), qs = visibleQs(), n = qs.length;
   if (FIT.step >= n){ FIT.step = n; renderFitResults(); return; }
   const Q = qs[FIT.step], v = FIT.a[Q.id];
   let field = '';
@@ -1719,11 +1722,11 @@ function autoPlan(a, top, res){
   } else {
     if (a.supervision !== 'no') P.h72.push('Report to my probation officer and keep my address up to date');
   }
-  if (a.outfit === 'need' || a.outfit === 'unsure') P.before.push('Get clothes for release day (ask Cell to Sunrise)');
+  if (inside && (a.outfit === 'need' || a.outfit === 'unsure')) P.before.push('Get clothes for release day (ask Cell to Sunrise)');
   if (inside){ if (a.ride === 'need' || a.ride === 'unsure') P.before.push('Line up a ride for release day (ask Cell to Sunrise)');
   else P.before.push('Confirm my ride’s time and pickup gate'); }
-  if (a.workrelease === 'need') P.before.push('Get help with my work release box (ask Cell to Sunrise)');
-  if (a.workrelease === 'have') P.before.push('Send my work release box list to the person helping me');
+  if (inside && a.workrelease === 'need') P.before.push('Get help with my work release box (ask Cell to Sunrise)');
+  if (inside && a.workrelease === 'have') P.before.push('Send my work release box list to the person helping me');
   if (a.locate === 'yes') P.before.push('Reconnect with someone who can support me (ask Cell to Sunrise)');
   if (a.supervision !== 'no') P.h72.push(inside ? 'Report to my probation officer on time' : 'Confirm my next probation check-in');
   if (a.path !== 'place') P.h72.push('Check in at my approved housing and learn the rules');
@@ -1827,7 +1830,7 @@ document.addEventListener('click', e => {
 });
 
 function renderFitResults(){
-  const a = norm(FIT.a);
+  purgeSkippedAnswers(); const a = norm(FIT.a);
   const scored = DATA.map(r => scoreHousing(r, a)).filter(Boolean).sort((x,y) => y.s - x.s || x.r.name.localeCompare(y.r.name));
   const top = a.path === 'place' ? [] : scored.slice(0, 8);
   const res = resourcesFor(a);
@@ -1993,7 +1996,7 @@ function seedPlanFromQuick(q){
   if(q.county && q.county !== 'Statewide') FIT.a.counties=[q.county]; else if(!FIT.a.counties) FIT.a.counties='any';
   FIT.a.path = q.need === 'recovery' ? 'recovery' : q.need === 'reg' ? 'register' : 'open';
   if(QM_TO_NEED[q.need]) FIT.a.needs=[...new Set([...(FIT.a.needs||[]),QM_TO_NEED[q.need]])];
-  fitSave();
+  purgeSkippedAnswers(); fitSave();
 }
 function renderGuidedBridge(){
   const g=store.get('guidedBridge',null), hidden=!g || g.dismissed;
