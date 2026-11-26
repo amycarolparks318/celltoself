@@ -10,7 +10,7 @@ async function walk(directory) {
     if (ignored.has(entry.name)) continue;
     const full = path.join(directory, entry.name);
     if (entry.isDirectory()) await walk(full);
-    else if (entry.name.endsWith('.html')) htmlFiles.push(full);
+    else if (entry.name.endsWith('.html') && !/^google[\da-f]+\.html$/.test(entry.name)) htmlFiles.push(full);
   }
 }
 

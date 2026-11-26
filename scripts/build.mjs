@@ -8,6 +8,11 @@ const data = { ...importedData, posts: [...localPosts, ...importedData.posts] };
 const siteOrigin = 'https://www.celltoself.com';
 const canonicalUrlFor = (route) => `${siteOrigin}/${route ? `${route}/` : ''}`;
 const sitemapRoutes = new Set(['', 'sunrise']);
+const reentryNotes = {
+  'dear-prison-pals-im-building-something-new': 'Explore the planning tool and resource directory for women coming home from prison.',
+  'one-month-out-and-apparently-employable': 'If you’re preparing to come home, find help with employment and other early reentry needs.',
+  'taptopay': 'If you’re getting ready for release, use the reentry planning tool to organize what you’ll need when you come home.',
+};
 const categoryOrder = ['dear-prison-pals', 'after-the-headline', 'healing-in-real-time', 'ink-on-the-inside'];
 
 const decode = (value = '') => value
@@ -211,8 +216,12 @@ for (let index = 0; index < data.posts.length; index += 1) {
   const storyClasses = ['story-page'];
   if (post.slug === 'the-other-side-of-a-second-chance') storyClasses.push('story-page--the-other-side-of-a-second-chance');
   if (post.slug === 'one-year-home-an-update-to-persevere') storyClasses.push('story-page--one-year-home');
+  const reentryNote = reentryNotes[post.slug];
+  const reentryLink = reentryNote
+    ? `<p>${esc(reentryNote)} <a href="${prefix}sunrise/">Explore Cell to Sunrise reentry resources</a>.</p>`
+    : '';
   const commentUrl = `${prefix}stay-connected/?post=${encodeURIComponent(strip(post.title))}#contact-form`;
-  const body = `<article class="${storyClasses.join(' ')}"><header class="article-header"><a class="back-link" href="${prefix}stories/">Back to Stories</a><p class="story-meta"><a href="${prefix}category/${cat.slug}/">${esc(cat.name)}</a>${writtenTimeline(post)}</p><h1>${esc(post.title)}</h1>${post.featuredImage ? `<img class="article-featured" src="${localMediaUrl(post.featuredImage, prefix)}" alt="${esc(post.featuredImageAlt || decode(post.title))}">` : ''}</header><div class="article-content">${writtenTimelineOverrides[post.slug] ? `<p class="story-timeline-intro">${writtenTimelineLabel(post)}</p>` : ''}${cleanArticle(post.content, prefix)}</div><nav class="story-pagination" aria-label="Story navigation">${previous ? `<a href="${prefix}${postRoute(previous)}/"><span>Previous Story</span><strong>${esc(previous.title)}</strong></a>` : '<span></span>'}${next ? `<a href="${prefix}${postRoute(next)}/"><span>Next Story</span><strong>${esc(next.title)}</strong></a>` : '<span></span>'}</nav><aside class="article-response" aria-label="Respond to this story"><p>Have a thought about this story?</p><a class="button-link article-comment-button" href="${commentUrl}">Send Amy a quick comment</a><small>Your message goes privately to Amy.</small></aside><section class="article-subscribe"><p class="eyebrow">The story is still unfolding</p><h2>Stay connected.</h2><p>Email subscription is coming soon. Until then, explore the complete archive.</p><a class="button-link" href="${prefix}stories/">Explore All Stories</a></section></article>`;
+  const body = `<article class="${storyClasses.join(' ')}"><header class="article-header"><a class="back-link" href="${prefix}stories/">Back to Stories</a><p class="story-meta"><a href="${prefix}category/${cat.slug}/">${esc(cat.name)}</a>${writtenTimeline(post)}</p><h1>${esc(post.title)}</h1>${post.featuredImage ? `<img class="article-featured" src="${localMediaUrl(post.featuredImage, prefix)}" alt="${esc(post.featuredImageAlt || decode(post.title))}">` : ''}</header><div class="article-content">${writtenTimelineOverrides[post.slug] ? `<p class="story-timeline-intro">${writtenTimelineLabel(post)}</p>` : ''}${cleanArticle(post.content, prefix)}${reentryLink}</div><nav class="story-pagination" aria-label="Story navigation">${previous ? `<a href="${prefix}${postRoute(previous)}/"><span>Previous Story</span><strong>${esc(previous.title)}</strong></a>` : '<span></span>'}${next ? `<a href="${prefix}${postRoute(next)}/"><span>Next Story</span><strong>${esc(next.title)}</strong></a>` : '<span></span>'}</nav><aside class="article-response" aria-label="Respond to this story"><p>Have a thought about this story?</p><a class="button-link article-comment-button" href="${commentUrl}">Send Amy a quick comment</a><small>Your message goes privately to Amy.</small></aside><section class="article-subscribe"><p class="eyebrow">The story is still unfolding</p><h2>Stay connected.</h2><p>Email subscription is coming soon. Until then, explore the complete archive.</p><a class="button-link" href="${prefix}stories/">Explore All Stories</a></section></article>`;
   const socialImage = post.featuredImage
     ? `https://www.celltoself.com${localMediaUrl(post.featuredImage, '').replace(/\.(?:webp|png)$/i, '.jpg').replace(/^/, '/')}`
     : undefined;
