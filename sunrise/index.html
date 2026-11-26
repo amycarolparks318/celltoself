@@ -1744,7 +1744,10 @@ function autoPlan(a, top, res){
   else (inside ? P.before : P.h72).push('Tell my support people my plan and how to reach me');
   if (a.children === 'with') P.d30.push('Confirm child care, school, health care and transportation for my children');
   if (a.children === 'reunite' || a.children === 'unsure') P.d30.push('Ask about the next safe step for visits or family reunification');
-  res.forEach(x => { const ok = x.rows.filter(r => !r.regOnly && r.registry !== 'accepts'); const r0 = (x.k === 'jobs' && ok.find(r => r.tags.includes('Jobs & training'))) || ok[0]; if (!r0) return; if (x.k === 'jobs' && !r0.tags.includes('Jobs & training')){ P.m3.push('Apply at ' + r0.name.split(' — ')[0]); return; } P.m3.push({jobs:'Get job help from ', legal:'Call ', health:'Set up care with ', food:'Get food and basics from ', sister:'Connect with ', support:'Meet with a case manager at ', transport:'Get transportation help from ', learn:'Get set up at '}[x.k] + r0.name.split(' — ')[0]); });
+  const plannedNeeds=new Set();
+  res.forEach(x => { const ok = x.rows.filter(r => !r.regOnly && r.registry !== 'accepts'); const r0 = (x.k === 'jobs' && ok.find(r => r.tags.includes('Jobs & training'))) || ok[0]; if (!r0) return; plannedNeeds.add(x.k); if (x.k === 'jobs' && !r0.tags.includes('Jobs & training')){ P.m3.push('Apply at ' + r0.name.split(' — ')[0]); return; } P.m3.push({jobs:'Get job help from ', legal:'Call ', health:'Set up care with ', food:'Get food and basics from ', sister:'Connect with ', support:'Meet with a case manager at ', transport:'Get transportation help from ', learn:'Get set up at '}[x.k] + r0.name.split(' — ')[0]); });
+  const fallbackNeeds={jobs:'Contact CareerSource or Goodwill for job help',legal:'Contact a legal-aid program for advice',health:'Make an appointment for health or mental-health care',food:'Apply for food help and find a nearby pantry',sister:'Connect with a women’s peer-support group',support:'Find a reentry case manager',transport:'Make a transportation plan for work, appointments and supervision',learn:'Visit a library or school program to ask about classes and computer access'};
+  (a.needs||[]).forEach(k=>{if(!plannedNeeds.has(k)&&fallbackNeeds[k])P.m3.push(fallbackNeeds[k]);});
   const work = (a.work||[]).filter(k => k !== 'none'), noWork = !work.length;
   const trained = (a.training||[]).filter(k => k !== 'none');
   if (trained.length && inside) P.before.push('Get copies of my diploma or certificates before I leave');
@@ -1992,7 +1995,7 @@ function updateFindCta(){ $('#findCtaSub').textContent = state.county && state.c
 const QM_NEED = [['housing','A safe place to live'],['tonight','Somewhere to stay tonight'],['recovery','Recovery or sober housing'],['food','Food and basic necessities'],['jobs','Employment or training'],['health','Health or treatment'],['transport','Transportation'],['support','Reentry support'],['reg','Registry-compatible resources']];
 const QM_TO_NEED = {food:'food',jobs:'jobs',health:'health',transport:'transport',support:'support'};
 function seedPlanFromQuick(q){
-  if(q.stage && q.stage !== 'helping') FIT.a.stage=q.stage;
+  if(q.stage === 'helping') FIT.a={}; else if(q.stage) FIT.a.stage=q.stage;
   if(q.county && q.county !== 'Statewide') FIT.a.counties=[q.county]; else if(!FIT.a.counties) FIT.a.counties='any';
   FIT.a.path = q.need === 'recovery' ? 'recovery' : q.need === 'reg' ? 'register' : 'open';
   if(QM_TO_NEED[q.need]) FIT.a.needs=[...new Set([...(FIT.a.needs||[]),QM_TO_NEED[q.need]])];
